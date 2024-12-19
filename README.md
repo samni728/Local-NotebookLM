@@ -1,2 +1,3 @@
 # Local-NotebookLM
-Googles NotebookLM but local
+
+Googles NotebookLM but local.
