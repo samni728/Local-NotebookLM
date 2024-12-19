@@ -18,3 +18,10 @@ Step2:
   temperature: 1
   length: "long" # can only be ["short", "medium", "long", "very-long"]
   style: "academic" # can only be ["friendly", "professional", "academic", "casual", "technical", "funny"]
+
+Step3:
+  model_name: "mlx-community/Josiefied-Qwen2.5-14B-Instruct-abliterated-v4-4-bit"
+  max_tokens: 8126
+  temperature: 1
+  length: "long"
+  style: "academic"

@@ -7,6 +7,9 @@ import yaml
 TranscriptLength = Literal["short", "medium", "long", "very-long"]
 TranscriptStyle = Literal["friendly", "professional", "academic", "casual", "technical"]
 
+valid_lengths = ["short", "medium", "long", "very-long"]
+valid_styles = ["friendly", "professional", "academic", "casual", "technical", "funny"]
+
 def read_config(config_path: str = "config.yaml") -> Dict[Any, Any]:
     """
     Read and parse a YAML configuration file.

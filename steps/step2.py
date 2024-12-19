@@ -1,4 +1,4 @@
-from helpers import TranscriptLength, TranscriptStyle
+from helpers import TranscriptLength, TranscriptStyle, valid_styles, valid_lengths
 from system_prompts import map_step2_and_3_system_prompt
 from typing import Any, Dict
 from mlx_lm import generate
@@ -122,10 +122,6 @@ def step2(
         InvalidParameterError: For invalid length or style parameters
     """
     try:
-        # Validate length and style parameters
-        valid_lengths = ["short", "medium", "long", "very-long"]
-        valid_styles = ["friendly", "professional", "academic", "casual", "technical", "funny"]
-        
         if length not in valid_lengths:
             raise InvalidParameterError(f"Invalid length parameter. Must be one of: {valid_lengths}")
         if style not in valid_styles:
