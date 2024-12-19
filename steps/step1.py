@@ -223,9 +223,9 @@ def step1(
                     model = model,
                     tokenizer = tokenizer,
                     client = client,
-                    chunk = chunk,
+                    text_chunk = chunk,
                     chunk_num = chunk_num,
-                    step1_system_prompt = step1_system_prompt,
+                    sys_prompt = step1_system_prompt,
                     model_name = config.get('model_name', model_name),
                     max_tokens=config.get('max_tokens', 512),
                     temperature=config.get('temperature', 0.7)
