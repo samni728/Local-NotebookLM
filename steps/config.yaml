@@ -1,0 +1,4 @@
+Step1:
+  model_name: "mlx-community/Josiefied-Qwen2.5-1.5B-Instruct-abliterated-v1-4bit"
+  max_tokens: 512
+  temperature: 0.7

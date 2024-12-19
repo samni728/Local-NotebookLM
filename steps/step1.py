@@ -1,4 +1,5 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List
+from mlx_lm import generate
 from pathlib import Path
 from tqdm import tqdm
 import logging
@@ -114,22 +115,40 @@ def create_word_bounded_chunks(text: str, target_chunk_size: int) -> List[str]:
     except Exception as e:
         raise ChunkProcessingError(f"Failed to create text chunks: {str(e)}")
 
-def process_chunk(client, text_chunk: str, chunk_num: int, sys_prompt: str, model_name: str) -> str:
-    """Process a chunk of text using the API client."""
+def process_chunk(
+        model,
+        tokenizer,
+        client = None,
+        text_chunk: str = None,
+        chunk_num: int = None,
+        sys_prompt: str = None,
+        model_name: str = None
+    ) -> str:
+    """Process a chunk of text using the API client or a local mlx-model."""
     try:
         conversation = [
             {"role": "system", "content": sys_prompt},
             {"role": "user", "content": text_chunk},
         ]
 
-        response = client.chat.completions.create(
-            model=model_name,
-            messages=conversation,
-            max_tokens=512,
-            temperature=0.7,
-        )
-
-        return response.choices[0].message.content
+        if client is not None:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=conversation,
+                max_tokens=512,
+                temperature=0.7,
+            )
+            return response.choices[0].message.content
+        else:
+            prompt = tokenizer.apply_chat_template(conversation, tokenize=False, add_generation_prompt=True)
+            processed_text = generate(
+                model=model,
+                tokenizer=tokenizer,
+                prompt=prompt,
+                max_tokens=512,
+                temp=0.7,
+            )
+            return processed_text
 
     except Exception as e:
         raise ChunkProcessingError(f"Failed to process chunk {chunk_num}: {str(e)}")
