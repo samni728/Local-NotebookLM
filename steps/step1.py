@@ -220,13 +220,15 @@ def step1(
             processed_text = ""
             for chunk_num, chunk in enumerate(tqdm(chunks, desc="Processing chunks", disable=None)):
                 processed_chunk = process_chunk(
-                    model,
-                    tokenizer,
-                    client,
-                    chunk,
-                    chunk_num,
-                    step1_system_prompt,
-                    model_name
+                    model = model,
+                    tokenizer = tokenizer,
+                    client = client,
+                    chunk = chunk,
+                    chunk_num = chunk_num,
+                    step1_system_prompt = step1_system_prompt,
+                    model_name = config.get('model_name', model_name),
+                    max_tokens=config.get('max_tokens', 512),
+                    temperature=config.get('temperature', 0.7)
                 )
                 processed_text += processed_chunk + "\n"
                 out_file.write(processed_chunk + "\n")
