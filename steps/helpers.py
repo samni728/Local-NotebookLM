@@ -103,6 +103,10 @@ def get_client_or_model_and_tokenizer(config_path: str = 'config.yaml'):
     api_key = config.get('api_key', None)
     base_url = config.get('base_url', None)
 
+    client = None
+    model = None
+    tokenizer = None
+
     if provider_format == 'openai':
         client = set_provider(
             provider_name=provider,

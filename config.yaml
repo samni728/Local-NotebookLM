@@ -23,5 +23,8 @@ Step3:
   model_name: "mlx-community/Josiefied-Qwen2.5-14B-Instruct-abliterated-v4-4-bit"
   max_tokens: 8126
   temperature: 1
-  length: "long"
-  style: "academic"
+
+Step4:
+  model_name: "lucasnewman/f5-tts-mlx"
+  cohost_speaker_ref_audio_path: "./voices/cohost.wav"
+  cohost_speaker_ref_audio_text: "Some call me nature, others call me mother nature."
