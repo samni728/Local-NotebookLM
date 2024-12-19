@@ -1,8 +1,11 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Literal
 from openai import OpenAI
 from pathlib import Path
 from mlx_lm import load
 import yaml
+
+TranscriptLength = Literal["short", "medium", "long", "very-long"]
+TranscriptStyle = Literal["friendly", "professional", "academic", "casual", "technical"]
 
 def read_config(config_path: str = "config.yaml") -> Dict[Any, Any]:
     """
@@ -36,7 +39,7 @@ def read_config(config_path: str = "config.yaml") -> Dict[Any, Any]:
         raise yaml.YAMLError(f"Error parsing YAML file: {e}")
 
 def set_provider(
-        provider_name: str,
+        provider_name: Literal['openai', 'lmstudio', 'ollama', 'groq', 'other'],
         base_url: Optional[str] = None,
         api_key: Optional[str] = 'NotebookLM_but_local'
     ) -> OpenAI:
@@ -91,7 +94,7 @@ def get_client_or_model_and_tokenizer(config_path: str = 'config.yaml'):
     config = read_config(config_path)
     global_config = config.get('Global', {})
 
-    provider_format = global_config.get('provider_format', 'openai')
+    provider_format: Literal['openai', 'mlx_lm'] = global_config.get('provider_format', 'openai')
     provider = global_config.get('provider', 'lmstudio')
 
     api_key = config.get('api_key', None)

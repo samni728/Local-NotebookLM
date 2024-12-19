@@ -11,3 +11,10 @@ Step1:
   temperature: 0.7
   chunk_size: 1000
   max_chars: 100000
+
+Step2:
+  model_name: "mlx-community/Josiefied-Qwen2.5-14B-Instruct-abliterated-v4-4-bit"
+  max_tokens: 8126
+  temperature: 1
+  length: "long" # can only be ["short", "medium", "long", "very-long"]
+  style: "academic" # can only be ["friendly", "professional", "academic", "casual", "technical", "funny"]
