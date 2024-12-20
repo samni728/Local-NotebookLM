@@ -2,8 +2,8 @@ Global:
   output_dir: "./resources"
   provider_format: 'openai' # can only be ['openai', 'mlx_lm']
   provider: "lmstudio" # can only be ['openai', 'lmstudio', 'ollama', 'groq', 'other']
-  base_url: ''
-  api_key: ''
+  base_url: '' # Only needed to be filled if provider is 'other'
+  api_key: '' # Only needed to be filled if provider is 'other', or 'openai', and 'groq'
 
 Step1:
   model_name: "mlx-community/Josiefied-Qwen2.5-1.5B-Instruct-abliterated-v1-4bit"

@@ -22,7 +22,12 @@ def parse_args():
     
     # Required arguments
     parser.add_argument('pdf_path', type=str, help='Path to the input PDF file')
-    parser.add_argument('--output_dir', type=str, help='Directory for output files')
+    
+    # Optional arguments
+    parser.add_argument('--config_path', type=str, default='config.yaml',
+                       help='Path to the configuration file (default: config.yaml)')
+    parser.add_argument('--output_dir', type=str, 
+                       help='Directory for output files')
     parser.add_argument('--length', type=str,
                        choices=['short', 'medium', 'long', 'very-long'],
                        help='Desired podcast length')
@@ -73,8 +78,9 @@ def main():
     args = parse_args()
     
     try:
-        # Load config and merge with command line arguments
-        config = read_config('config.yaml')
+        # Load config from specified path and merge with command line arguments
+        logger.info(f"Loading configuration from {args.config_path}")
+        config = read_config(args.config_path)
         config = get_config_with_args(args, config)
         
         # Create output directory
