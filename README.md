@@ -10,6 +10,10 @@ A local AI-powered tool that converts PDF documents into engaging podcasts, usin
 - Text-to-Speech conversion with voice cloning capabilities
 - Fully configurable pipeline
 
+## Prerequisits
+
+Before you start, you have to install Docker desktop and install [Kokoro-FastAPI](https://github.com/remsky/Kokoro-FastAPI) from remsky, and you're good to go!
+
 ## Installation
 
 1: Clone the repository:
