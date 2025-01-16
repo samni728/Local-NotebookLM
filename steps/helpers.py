@@ -42,7 +42,7 @@ def read_config(config_path: str = "config.yaml") -> Dict[Any, Any]:
         raise yaml.YAMLError(f"Error parsing YAML file: {e}")
 
 def set_provider(
-        provider_name: Literal['openai', 'lmstudio', 'ollama', 'groq', 'other'],
+        provider_name: Literal['openai', 'lmstudio', 'ollama', 'groq', 'kokoro', 'other'],
         base_url: Optional[str] = None,
         api_key: Optional[str] = 'NotebookLM_but_local'
     ) -> OpenAI:
@@ -79,6 +79,12 @@ def set_provider(
     elif provider_name == "groq":
         client = OpenAI(
             base_url='https://api.groq.com/openai/v1',
+            api_key=api_key,
+        )
+        return client
+    elif provider_name == "kokoro":
+        client = OpenAI(
+            base_url='http://localhost:8880/v1',
             api_key=api_key,
         )
         return client

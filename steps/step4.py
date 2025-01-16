@@ -1,5 +1,5 @@
-from f5_tts_mlx.generate import generate, SAMPLE_RATE
-from typing import List, Tuple, Optional, Dict, Any
+from typing import List, Tuple, Dict, Any
+from helpers import set_provider
 from pathlib import Path
 from tqdm import tqdm
 import soundfile as sf
@@ -8,6 +8,8 @@ import logging
 import pickle
 import ast
 import re
+
+client = set_provider('kokoro')
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -74,38 +76,28 @@ def concatenate_audio_files(segment_dir: Path) -> np.ndarray:
 
 def generate_speaker_audio(
     text: str,
-    model_name: str,
-    output_path: Path,
-    ref_audio_path: Optional[Path] = None,
-    ref_audio_text: Optional[str] = None
+    output_path: str,
+    voice: str = 'af_sky'
 ) -> None:
     """
     Generate audio for a single speaker.
     
     Args:
         text: Text to convert to speech
-        model_name: Name of the TTS model to use
+        voice: Name of the voice to use
         output_path: Path to save the generated audio
-        ref_audio_path: Optional path to reference audio for voice cloning
-        ref_audio_text: Optional text corresponding to reference audio
     
     Raises:
         AudioGenerationError: If audio generation fails
     """
     try:
-        generate_kwargs = {
-            "generation_text": text,
-            "model_name": model_name,
-            "output_path": str(output_path)
-        }
-        
-        if ref_audio_path and ref_audio_text:
-            generate_kwargs.update({
-                "ref_audio_path": str(ref_audio_path),
-                "ref_audio_text": ref_audio_text
-            })
-            
-        generate(**generate_kwargs)
+        with client.audio.speech.with_streaming_response.create(
+            model="kokoro", 
+            voice=voice, # af_sky+af_bella single or multiple voicepack combo possible
+            input=text,
+            response_format="wav"
+        ) as response:
+            response.stream_to_file(f"{output_path}.wav")
         
     except Exception as e:
         raise AudioGenerationError(f"Failed to generate audio: {str(e)}")
