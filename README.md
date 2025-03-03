@@ -19,7 +19,7 @@ Before you start, you have to install Docker desktop and install [Kokoro-FastAPI
 1: Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/Local-NotebookLM.git
+git clone https://github.com/Goekdeniz-Guelmez/Local-NotebookLM.git
 cd Local-NotebookLM
 ```
 
