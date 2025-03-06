@@ -1,4 +1,4 @@
-from system_prompts import step1_system_prompt
+from system_prompts import step1_prompt
 from typing import Optional, List, Dict, Any
 from mlx_lm import generate
 from pathlib import Path
