@@ -87,7 +87,7 @@ def get_length_guide(length, format_type) -> str:
         "short": "Keep the {format_type} concise and to the point, focusing only on the main concepts. Aim for about 10-15 minutes of content.",
         "medium": "Create a balanced {format_type} covering main points with some examples. Aim for about 20-30 minutes of content.",
         "long": "Develop a comprehensive {format_type} with detailed examples and discussions. Aim for about 45-60 minutes of content.",
-        "very-long": "Create an in-depth {format_type} exploring all aspects with extensive examples and discussions. Aim for 90+ minutes of content."
+        "very-long": "Create an in-depth {format_type} exploring all aspects with extensive examples and discussions. Aim for 90+ minutes of content or ."
     }
     return guides.get(length, guides["long"]).format(format_type=format_type)
 

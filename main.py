@@ -1,19 +1,11 @@
 from pathlib import Path
 import argparse
-import logging
 
 from steps.step1 import step1
 from steps.step2 import step2
 from steps.step3 import step3
 from steps.step4 import step4
 from steps.helpers import set_provider
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a podcast from a PDF document")
@@ -64,7 +56,7 @@ def main():
         
         # Step 1: Process PDF
         if not args.skip_to or args.skip_to <= 1:
-            logger.info("Step 1: Processing PDF...")
+            print("Step 1: Processing PDF...")
             cleaned_text_file = step1(
                 client=small_text_client,
                 pdf_path=args.pdf,
@@ -73,18 +65,18 @@ def main():
             )
         else:
             # If skipping, find the most recent output file from step1
-            logger.info("Skipping Step 1, looking for existing output...")
+            print("Skipping Step 1, looking for existing output...")
             step1_files = list(output_dirs["step1"].glob("*.txt"))
             if step1_files:
                 cleaned_text_file = str(sorted(step1_files, key=lambda x: x.stat().st_mtime, reverse=True)[0])
-                logger.info(f"Using existing file from Step 1: {cleaned_text_file}")
+                print(f"Using existing file from Step 1: {cleaned_text_file}")
             else:
-                logger.error("No output files found from Step 1. Cannot skip this step.")
+                print("No output files found from Step 1. Cannot skip this step.")
                 return 1
         
         # Step 2: Generate transcript
         if not args.skip_to or args.skip_to <= 2:
-            logger.info("Step 2: Generating transcript...")
+            print("Step 2: Generating transcript...")
             _, transcript_file = step2(
                 client=big_text_client,
                 config=config,
@@ -96,18 +88,18 @@ def main():
             )
         else:
             # If skipping, find the most recent output file from step2
-            logger.info("Skipping Step 2, looking for existing output...")
+            print("Skipping Step 2, looking for existing output...")
             step2_files = list(output_dirs["step2"].glob("*.txt"))
             if step2_files:
                 transcript_file = str(sorted(step2_files, key=lambda x: x.stat().st_mtime, reverse=True)[0])
-                logger.info(f"Using existing file from Step 2: {transcript_file}")
+                print(f"Using existing file from Step 2: {transcript_file}")
             else:
-                logger.error("No output files found from Step 2. Cannot skip this step.")
+                print("No output files found from Step 2. Cannot skip this step.")
                 return 1
         
         # Step 3: Optimize for TTS
         if not args.skip_to or args.skip_to <= 3:
-            logger.info("Step 3: Optimizing for text-to-speech...")
+            print("Step 3: Optimizing for text-to-speech...")
             step3(
                 client=big_text_client,
                 config=config,
@@ -116,24 +108,24 @@ def main():
                 preference_text=args.preference
             )
         else:
-            logger.info("Skipping Step 3, assuming files exist in output directory...")
+            print("Skipping Step 3, assuming files exist in output directory...")
             # No need to find files here as step4 will look for them directly
         
         # Step 4: Generate audio
         if not args.skip_to or args.skip_to <= 4:
-            logger.info("Step 4: Generating audio...")
+            print("Step 4: Generating audio...")
             final_audio_path = step4(
                 client=tts_client,
                 config=config,
                 dir=str(output_dirs["step3"])
             )
             
-            logger.info(f"Podcast generation complete! Final audio file: {final_audio_path}")
+            print(f"Podcast generation complete! Final audio file: {final_audio_path}")
         
         return 0
         
     except Exception as e:
-        logger.error(f"Error during podcast generation: {str(e)}")
+        print(f"Error during podcast generation: {str(e)}")
         return 1
 
 if __name__ == "__main__":
