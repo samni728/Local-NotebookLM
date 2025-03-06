@@ -28,6 +28,7 @@ def main():
     parser.add_argument("--style", type=str, choices=["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"], default="normal", help="Content style")
     parser.add_argument("--preference", type=str, help="Additional preferences or instructions")
     parser.add_argument("--output-dir", type=str, default="./output", help="Directory to store output files")
+    parser.add_argument("--skip-to", type=int, choices=[1, 2, 3, 4], help="Skip to a specific step (1-4)")
     
     args = parser.parse_args()
     
@@ -57,46 +58,78 @@ def main():
     tts_client = set_provider(config=config["Text-To-Speech-Model"]["provider"])
     
     try:
+        # Initialize variables for file paths that might be skipped
+        cleaned_text_file = None
+        transcript_file = None
+        
         # Step 1: Process PDF
-        logger.info("Step 1: Processing PDF...")
-        cleaned_text_file = step1(
-            client=small_text_client,
-            pdf_path=args.pdf,
-            config=config,
-            output_dir=str(output_dirs["step1"])
-        )
+        if not args.skip_to or args.skip_to <= 1:
+            logger.info("Step 1: Processing PDF...")
+            cleaned_text_file = step1(
+                client=small_text_client,
+                pdf_path=args.pdf,
+                config=config,
+                output_dir=str(output_dirs["step1"])
+            )
+        else:
+            # If skipping, find the most recent output file from step1
+            logger.info("Skipping Step 1, looking for existing output...")
+            step1_files = list(output_dirs["step1"].glob("*.txt"))
+            if step1_files:
+                cleaned_text_file = str(sorted(step1_files, key=lambda x: x.stat().st_mtime, reverse=True)[0])
+                logger.info(f"Using existing file from Step 1: {cleaned_text_file}")
+            else:
+                logger.error("No output files found from Step 1. Cannot skip this step.")
+                return 1
         
         # Step 2: Generate transcript
-        logger.info("Step 2: Generating transcript...")
-        _, transcript_file = step2(
-            client=big_text_client,
-            config=config,
-            input_file=cleaned_text_file,
-            output_dir=str(output_dirs["step2"]),
-            format_type=args.format,
-            length=args.length,
-            style=args.style
-        )
+        if not args.skip_to or args.skip_to <= 2:
+            logger.info("Step 2: Generating transcript...")
+            _, transcript_file = step2(
+                client=big_text_client,
+                config=config,
+                input_file=cleaned_text_file,
+                output_dir=str(output_dirs["step2"]),
+                format_type=args.format,
+                length=args.length,
+                style=args.style
+            )
+        else:
+            # If skipping, find the most recent output file from step2
+            logger.info("Skipping Step 2, looking for existing output...")
+            step2_files = list(output_dirs["step2"].glob("*.txt"))
+            if step2_files:
+                transcript_file = str(sorted(step2_files, key=lambda x: x.stat().st_mtime, reverse=True)[0])
+                logger.info(f"Using existing file from Step 2: {transcript_file}")
+            else:
+                logger.error("No output files found from Step 2. Cannot skip this step.")
+                return 1
         
         # Step 3: Optimize for TTS
-        logger.info("Step 3: Optimizing for text-to-speech...")
-        step3(
-            client=big_text_client,
-            config=config,
-            input_file=transcript_file,
-            output_dir=str(output_dirs["step3"]),
-            preference_text=args.preference
-        )
+        if not args.skip_to or args.skip_to <= 3:
+            logger.info("Step 3: Optimizing for text-to-speech...")
+            step3(
+                client=big_text_client,
+                config=config,
+                input_file=transcript_file,
+                output_dir=str(output_dirs["step3"]),
+                preference_text=args.preference
+            )
+        else:
+            logger.info("Skipping Step 3, assuming files exist in output directory...")
+            # No need to find files here as step4 will look for them directly
         
         # Step 4: Generate audio
-        logger.info("Step 4: Generating audio...")
-        final_audio_path = step4(
-            client=tts_client,
-            config=config,
-            dir=str(output_dirs["step3"])
-        )
+        if not args.skip_to or args.skip_to <= 4:
+            logger.info("Step 4: Generating audio...")
+            final_audio_path = step4(
+                client=tts_client,
+                config=config,
+                dir=str(output_dirs["step3"])
+            )
+            
+            logger.info(f"Podcast generation complete! Final audio file: {final_audio_path}")
         
-        logger.info(f"Podcast generation complete! Final audio file: {final_audio_path}")
         return 0
         
     except Exception as e:
