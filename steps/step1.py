@@ -100,7 +100,7 @@ def create_word_bounded_chunks(text: str, target_chunk_size: int) -> List[str]:
         current_length = 0
 
         for word in words:
-            word_length = len(word) + 1  # +1 for the space
+            word_length = len(word) + 1
             if current_length + word_length > target_chunk_size and current_chunk:
                 chunks.append(' '.join(current_chunk))
                 current_chunk = [word]
@@ -130,8 +130,7 @@ def process_chunk(
     """Process a chunk of text using the API client or a local mlx-model."""
     try:
         conversation = [
-            {"role": "system", "content": sys_prompt},
-            {"role": "user", "content": text_chunk},
+            {"role": "user", "content": step1_prompt.format(text_chunk=text_chunk)},
         ]
 
         if client is not None:
