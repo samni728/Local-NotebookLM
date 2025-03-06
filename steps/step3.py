@@ -1,4 +1,4 @@
-from .system_prompts import step3_system_prompt
+from .prompts import step3_system_prompt
 from .helpers import generate, FormatType
 from typing import Dict, Any, Optional
 from ast import literal_eval

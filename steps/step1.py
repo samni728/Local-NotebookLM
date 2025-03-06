@@ -1,5 +1,5 @@
 from typing import Optional, List, Dict, Any
-from .system_prompts import step1_prompt
+from .prompts import step1_prompt
 import logging, PyPDF2, os, time
 from .helpers import generate
 from pathlib import Path

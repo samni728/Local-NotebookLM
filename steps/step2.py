@@ -1,5 +1,5 @@
 from .helpers import generate, FormatType, LengthType, StyleType
-from .system_prompts import map_step2_system_prompt
+from .prompts import map_step2_system_prompt
 from typing import Any, Dict, Optional
 import logging, pickle, time
 from pathlib import Path
