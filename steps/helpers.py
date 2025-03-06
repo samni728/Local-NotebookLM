@@ -4,11 +4,16 @@ from pathlib import Path
 from mlx_lm import load
 import yaml
 
-TranscriptLength = Literal["short", "medium", "long", "very-long"]
-TranscriptStyle = Literal["friendly", "professional", "academic", "casual", "technical"]
+FormatType = Literal[
+    "podcast", "interview", "panel-discussion", "debate", # Conversation-based formats
+    "summary", "narration", "storytelling", "explainer", # Narrative formats
+    "lecture", "tutorial", "q-and-a", # Educational formats
+    "news-report", "executive-brief", "meeting-minutes", "analysis", # Professional formats
+]
 
-valid_lengths = ["short", "medium", "long", "very-long"]
-valid_styles = ["friendly", "professional", "academic", "casual", "technical", "funny"]
+LengthType = Literal["short", "medium", "long", "very-long"]
+
+StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
 
 def read_config(config_path: str = "config.yaml") -> Dict[Any, Any]:
     """
