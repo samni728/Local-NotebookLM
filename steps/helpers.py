@@ -1,66 +1,22 @@
-from typing import Dict, Any, Optional, Literal
-from openai import OpenAI
-from pathlib import Path
-from mlx_lm import load
-import yaml
+from typing import Dict, Any, List, Optional, Literal
+from openai import OpenAI, AzureOpenAI
 
 FormatType = Literal[
-    "podcast", "interview", "panel-discussion", "debate", # Conversation-based formats
-    "summary", "narration", "storytelling", "explainer", # Narrative formats
-    "lecture", "tutorial", "q-and-a", # Educational formats
-    "news-report", "executive-brief", "meeting-minutes", "analysis", # Professional formats
+    "podcast", "interview", "panel-discussion", "debate",
+    "summary", "narration", "storytelling", "explainer",
+    "lecture", "tutorial", "q-and-a",
+    "news-report", "executive-brief", "meeting-minutes", "analysis",
 ]
-
 LengthType = Literal["short", "medium", "long", "very-long"]
-
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
 
-def read_config(config_path: str = "config.yaml") -> Dict[Any, Any]:
-    """
-    Read and parse a YAML configuration file.
-    
-    Args:
-        config_path (str): Path to the YAML configuration file. Defaults to "config.yaml"
-        
-    Returns:
-        Dict[Any, Any]: Dictionary containing the parsed YAML content
-        
-    Raises:
-        FileNotFoundError: If the configuration file doesn't exist
-        yaml.YAMLError: If the YAML file is invalid or cannot be parsed
-    """
-    config_file = Path(config_path)
-    
-    if not config_file.exists():
-        raise FileNotFoundError(f"Configuration file not found at: {config_path}")
-    
-    try:
-        with open(config_file, 'r') as f:
-            config = yaml.safe_load(f)
-            
-        if config is None:
-            return {}
-            
-        return config
-        
-    except yaml.YAMLError as e:
-        raise yaml.YAMLError(f"Error parsing YAML file: {e}")
-
 def set_provider(
-        provider_name: Literal['openai', 'lmstudio', 'ollama', 'groq', 'kokoro', 'other'],
-        base_url: Optional[str] = None,
-        api_key: Optional[str] = 'NotebookLM_but_local'
-    ) -> OpenAI:
-    """
-    Set the provider name for the API call.
-
-    Args:
-        provider_name (str): The name of the provider. Can only be "openai", "lmstudio" "ollama", "groq", and "other".
-
-    Returns:
-        OpenAI: The OpenAI client object.
-    """
-
+        provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'custom']] = None,
+        config: Optional[Dict[str, Any]] = None
+    ):
+    if provider_name == None:
+        provider_name = config["name"]
+    api_key = config["key"]
     if provider_name == "openai":
         if api_key is None:
             raise ValueError("API key is required for OpenAI provider.")
@@ -87,13 +43,24 @@ def set_provider(
             api_key=api_key,
         )
         return client
-    elif provider_name == "kokoro":
-        client = OpenAI(
-            base_url='http://localhost:8880/v1',
-            api_key=api_key,
+    elif provider_name == "azure":
+        base_url = config["endpoint"]
+        version = config["version"]
+        if base_url is None:
+            raise ValueError("Base URL is required for AzureOpenAI provider.")
+        if version is None:
+            raise ValueError("Version is required for AzureOpenAI provider.")
+        if api_key is None:
+            raise ValueError("Key is required for AzureOpenAI provider.")
+
+        client = AzureOpenAI(
+            azure_endpoint=base_url,
+            api_version=version,
+            api_key=api_key
         )
         return client
-    elif provider_name == "other":
+    elif provider_name == "custom":
+        base_url = config["endpoint"]
         if base_url is None:
             raise ValueError("Base URL is required for OpenAI provider, also if it needs a key then provide it too.")
         
@@ -103,29 +70,17 @@ def set_provider(
         )
         return client
 
-def get_client_or_model_and_tokenizer(config_path: str = 'config.yaml'):
-    """Get the client or model and tokenizer based on the configuration."""
-    config = read_config(config_path)
-    global_config = config.get('Global', {})
-
-    provider_format: Literal['openai', 'mlx_lm'] = global_config.get('provider_format', 'openai')
-    provider = global_config.get('provider', 'lmstudio')
-
-    api_key = config.get('api_key', None)
-    base_url = config.get('base_url', None)
-
-    client = None
-    model = None
-    tokenizer = None
-
-    if provider_format == 'openai':
-        client = set_provider(
-            provider_name=provider,
-            base_url=base_url,
-            api_key=api_key
-        )
-    else:
-        model_name = global_config.get('model_name', 'gpt-3.5-turbo')
-        model, tokenizer = load(model_name)
-
-    return client, model, tokenizer
+def generate (
+    client: Any = None,
+    messages: Optional[List[Dict]] = None,
+    model: str = "gpt-4o-mini",
+    max_tokens: int = 512,
+    temperature: float = 0.7
+) -> str:
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        max_tokens=max_tokens,
+        temperature=temperature,
+    )
+    return response.choices[0].message.content

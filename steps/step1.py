@@ -1,31 +1,23 @@
-from system_prompts import step1_prompt
 from typing import Optional, List, Dict, Any
-from mlx_lm import generate
+from .system_prompts import step1_prompt
+import logging, PyPDF2, os, time
+from .helpers import generate
 from pathlib import Path
 from tqdm import tqdm
-import logging
-import PyPDF2
-import os
+
 
 logger = logging.getLogger(__name__)
 
 class PDFProcessingError(Exception):
-    """Base exception for PDF processing errors."""
     pass
 class PDFValidationError(PDFProcessingError):
-    """Exception raised for PDF validation issues."""
     pass
 class PDFExtractionError(PDFProcessingError):
-    """Exception raised for text extraction issues."""
     pass
 class ChunkProcessingError(PDFProcessingError):
-    """Exception raised for chunk processing issues."""
     pass
 
-
-# PDF Processing Functions
 def validate_pdf(file_path: str) -> bool:
-    """Validate if the file exists and is a PDF."""
     if not os.path.exists(file_path):
         raise PDFValidationError(f"File not found at path: {file_path}")
     if not file_path.lower().endswith('.pdf'):
@@ -33,7 +25,6 @@ def validate_pdf(file_path: str) -> bool:
     return True
 
 def get_pdf_metadata(file_path: str) -> Optional[dict]:
-    """Extract metadata from PDF file."""
     try:
         if not validate_pdf(file_path):
             return None
@@ -51,7 +42,6 @@ def get_pdf_metadata(file_path: str) -> Optional[dict]:
         raise PDFExtractionError(f"Failed to extract metadata: {str(e)}")
 
 def extract_text_from_pdf(file_path: str, max_chars: int = 100000) -> str:
-    """Extract text content from PDF file."""
     try:
         if not validate_pdf(file_path):
             return None
@@ -66,7 +56,7 @@ def extract_text_from_pdf(file_path: str, max_chars: int = 100000) -> str:
 
             for page_num in range(num_pages):
                 page = pdf_reader.pages[page_num]
-                text = page.extract_text()
+                text = page.extract_text() or ""
 
                 if total_chars + len(text) > max_chars:
                     remaining_chars = max_chars - total_chars
@@ -89,10 +79,7 @@ def extract_text_from_pdf(file_path: str, max_chars: int = 100000) -> str:
     except Exception as e:
         raise PDFExtractionError(f"Failed to extract text: {str(e)}")
 
-
-# Chunk Processing Functions
 def create_word_bounded_chunks(text: str, target_chunk_size: int) -> List[str]:
-    """Split text into chunks at word boundaries."""
     try:
         words = text.split()
         chunks = []
@@ -117,82 +104,39 @@ def create_word_bounded_chunks(text: str, target_chunk_size: int) -> List[str]:
         raise ChunkProcessingError(f"Failed to create text chunks: {str(e)}")
 
 def process_chunk(
-        model,
-        tokenizer,
-        client = None,
-        text_chunk: str = None,
-        chunk_num: int = None,
-        sys_prompt: str = None,
-        model_name: str = None,
-        max_tokens: int = 512,
-        temperature: float = 0.7
+        client,
+        text_chunk,
+        chunk_num,
+        model_name,
+        max_tokens,
+        temperature
     ) -> str:
-    """Process a chunk of text using the API client or a local mlx-model."""
     try:
-        conversation = [
+        time.sleep(4)
+        messages = [
             {"role": "user", "content": step1_prompt.format(text_chunk=text_chunk)},
         ]
-
-        if client is not None:
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=conversation,
-                max_tokens=max_tokens,
-                temperature=temperature,
-            )
-            return response.choices[0].message.content
-        else:
-            prompt = tokenizer.apply_chat_template(conversation, tokenize=False, add_generation_prompt=True)
-            processed_text = generate(
-                model=model,
-                tokenizer=tokenizer,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                temp=temperature,
-            )
-            return processed_text
+        return generate(
+            client=client,
+            model=model_name,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
 
     except Exception as e:
         raise ChunkProcessingError(f"Failed to process chunk {chunk_num}: {str(e)}")
-    
 
-# Main Step1 Function
 def step1(
     pdf_path: str,
-    model,
-    tokenizer,
-    client = None,
-    config: Dict[Any, Any] = None,
-    model_name: str = None,
+    client: Any = None,
+    config: Optional[Dict[str, Any]] = None,
     output_dir: str = None,
-    chunk_size: int = 1000,
-    max_chars: int = 100000,
 ) -> str:
-    """
-    Process PDF and generate clean text output.
-    
-    Args:
-        pdf_path: Path to the input PDF file
-        client: Initialized API client
-        model_name: Name of the model to use for processing
-        output_dir: Directory for output files
-        chunk_size: Size of text chunks for processing
-        max_chars: Maximum characters to process from PDF
-        
-    Returns:
-        string of output_file_path
-        
-    Raises:
-        PDFProcessingError: For any PDF processing related errors
-        ChunkProcessingError: For text chunk processing errors
-        OSError: For file system related errors
-    """
     try:
-        # Create output directory if it doesn't exist
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Get metadata (optional, won't stop processing if it fails)
         try:
             metadata = get_pdf_metadata(pdf_path)
             if metadata:
@@ -200,36 +144,28 @@ def step1(
         except PDFExtractionError as e:
             logger.warning(f"Failed to extract metadata: {e}")
 
-        # Extract text
-        extracted_text = extract_text_from_pdf(pdf_path, max_chars)
+        extracted_text = extract_text_from_pdf(pdf_path, config["Step1"]["max_chars"])
         if not extracted_text:
             raise PDFExtractionError("No text extracted from PDF")
 
-        # Save extracted text
         input_file = output_dir / 'extracted_text.txt'
         input_file.write_text(extracted_text, encoding='utf-8')
 
-        # Process text in chunks
-        chunks = create_word_bounded_chunks(extracted_text, chunk_size)
+        chunks = create_word_bounded_chunks(extracted_text, config["Step1"]["chunk_size"])
         output_file = output_dir / f"clean_{input_file.name}"
-        
+
         logger.info(f"Processing {len(chunks)} chunks")
-        
+
         with open(output_file, 'w', encoding='utf-8') as out_file:
-            processed_text = ""
             for chunk_num, chunk in enumerate(tqdm(chunks, desc="Processing chunks", disable=None)):
                 processed_chunk = process_chunk(
-                    model = model,
-                    tokenizer = tokenizer,
-                    client = client,
-                    text_chunk = chunk,
-                    chunk_num = chunk_num,
-                    sys_prompt = step1_system_prompt,
-                    model_name = config.get('model_name', model_name),
-                    max_tokens=config.get('max_tokens', 512),
-                    temperature=config.get('temperature', 0.7)
+                    client=client,
+                    text_chunk=chunk,
+                    chunk_num=chunk_num,
+                    model_name=config["Small-Text-Model"]["model"],
+                    max_tokens=config["Step1"]["max_tokens"],
+                    temperature=config["Step1"]["temperature"]
                 )
-                processed_text += processed_chunk + "\n"
                 out_file.write(processed_chunk + "\n")
                 out_file.flush()
 

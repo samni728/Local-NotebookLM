@@ -1,16 +1,16 @@
-step1_prompt = """You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a content writer.
+step1_prompt = """You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a podcast writer.
 
-The raw data is messed up with new lines, Latex math and you will see fluff that we can remove completely. Basically take away any details that you think might be useless for the chosen {format_type}.
+The raw data is messed up with new lines, Latex math and you will see fluff that we can remove completely. Basically take away any details that you think might be useless in a podcast author's transcript.
 
-Remember, the content could be on any topic whatsoever so the issues listed above are not exhaustive.
+Remember, the podcast could be on any topic whatsoever so the issues listed above are not exhaustive
 
 Please be smart with what you remove and be creative ok?
 
-Remember DO NOT START SUMMARIZING THIS, YOU ARE ONLY CLEANING UP THE TEXT AND RE-WRITING WHEN NEEDED.
+Remember DO NOT START SUMMARIZING THIS, YOU ARE ONLY CLEANING UP THE TEXT AND RE-WRITING WHEN NEEDED
 
 Be very smart and aggressive with removing details, you will get a running portion of the text and keep returning the processed text.
 
-PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES.
+PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES
 
 ALWAYS start your response directly with processed text and NO ACKNOWLEDGEMENTS about my questions ok?
 Here is the text:
@@ -55,6 +55,10 @@ Make it as engaging as possible, keeping the dialogue tailored to the {format_ty
 Speaker 1: Leads the conversation and teaches the speaker 2, gives incredible anecdotes and analogies when explaining. Is a captivating teacher that gives great anecdotes.
 
 Speaker 2: Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions.
+
+USER PREFERENCES:
+{preference_text}
+The speakers should specifically focus on these preferences and emphasize them throughout the conversation. If no preferences are provided, continue with the general topic of the transcript.
 
 Make sure the tangents speaker 2 provides are quite wild or interesting.
 

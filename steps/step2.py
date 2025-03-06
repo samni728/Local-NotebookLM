@@ -1,40 +1,27 @@
-from helpers import TranscriptLength, TranscriptStyle, valid_styles, valid_lengths
-from system_prompts import map_step2_system_prompt
-from typing import Any, Dict
-from mlx_lm import generate
+from .helpers import generate, FormatType, LengthType, StyleType
+from .system_prompts import map_step2_system_prompt
+from typing import Any, Dict, Optional
+import logging, pickle, time
 from pathlib import Path
-import logging
-import pickle
+
 
 logger = logging.getLogger(__name__)
 
-# Set up logging
 class TranscriptError(Exception):
-    """Base exception for transcript processing errors."""
     pass
-
 class FileReadError(TranscriptError):
-    """Exception raised for file reading issues."""
     pass
-
 class TranscriptGenerationError(TranscriptError):
-    """Exception raised for transcript generation issues."""
     pass
-
 class InvalidParameterError(TranscriptError):
-    """Exception raised for invalid parameter values."""
     pass
 
-# Step 2 Helper Functions
 def read_input_file(filename: str) -> str:
-    """Read input file with multiple encoding attempts."""
     try:
-        # Try UTF-8 first
         with open(filename, 'r', encoding='utf-8') as file:
             content = file.read()
         return content
     except UnicodeDecodeError:
-        # Try other encodings
         encodings = ['latin-1', 'cp1252', 'iso-8859-1']
         for encoding in encodings:
             try:
@@ -50,89 +37,61 @@ def read_input_file(filename: str) -> str:
     except IOError as e:
         raise FileReadError(f"Could not read file '{filename}': {str(e)}")
 
-# Generate Transcript Function
 def generate_transcript(
-    model,
-    tokenizer,
-    client = None,
-    model_name: str = None,
-    input_text: str = None,
-    length: TranscriptLength = None,
-    style: TranscriptStyle = None,
+    client,
+    model_name,
+    input_text,
+    length,
+    style,
     format_type,
-    max_tokens: int = 8126,
-    temperature: float = 1
+    max_tokens,
+    temperature
 ) -> str:
-    """Generate podcast transcript using the model."""
     try:
+        time.sleep(4)
         conversation = [
             {"role": "system", "content": map_step2_system_prompt(length=length, style=style, format_type=format_type)},
             {"role": "user", "content": input_text},
         ]
-
-        if client is not None:
-            response = client.chat.completions.create(
-                model=model_name,
-                messages=conversation,
-                max_tokens=max_tokens,
-                temperature=temperature,
-            )
-            return response.choices[0].message.content
-        else:
-            prompt = tokenizer.apply_chat_template(conversation, tokenize=False, add_generation_prompt=True)
-            processed_text = generate(
-                model=model,
-                tokenizer=tokenizer,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                temp=temperature,
-            )
-            return processed_text
+        return generate(
+            client=client,
+            model=model_name,
+            messages=conversation,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
 
     except Exception as e:
         raise TranscriptGenerationError(f"Failed to generate transcript: {str(e)}")
 
-# Main Step2 Function
 def step2(
-    model,
-    tokenizer,
-    client = None,
-    config: Dict[Any, Any] = None,
+    client: Any = None,
+    config: Optional[Dict[str, Any]] = None,
     input_file: str = None,
-    length: TranscriptLength = "medium",
-    style: TranscriptStyle = "academic",
-    model_name: str = None,
-    output_dir: str = None
+    output_dir: str = None,
+    format_type: FormatType = "summary",
+    length: LengthType = "medium",
+    style: StyleType = "normal"
 ) -> str:
     try:
-        if length not in valid_lengths:
-            raise InvalidParameterError(f"Invalid length parameter. Must be one of: {valid_lengths}")
-        if style not in valid_styles:
-            raise InvalidParameterError(f"Invalid style parameter. Must be one of: {valid_styles}")
-
-        # Create output directory if it doesn't exist
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Read input file
         logger.info(f"Reading input file: {input_file}")
         input_text = read_input_file(input_file)
 
-        # Generate transcript
         logger.info(f"Generating {length} {style} transcript...")
         transcript = generate_transcript(
-            model = model,
-            tokenizer = tokenizer,
-            client = client,
-            model_name = config.get('model_name', model_name),
-            input_text = input_text,
-            length = config.get('length', length),
-            style = config.get('style', style),
-            max_tokens = config.get('max_tokens', 8126),
-            temperature = config.get('temperature', 1)
+            client=client,
+            model_name=config["Big-Text-Model"]["model"],
+            input_text=input_text,
+            format_type=format_type,
+            length=length,
+            style=style,
+            max_tokens=config["Step2"]["max_tokens"],
+            temperature=config["Step2"]["temperature"]
         )
 
-        # Save transcript
         output_file = output_dir / 'data.pkl'
         with open(output_file, 'wb') as file:
             pickle.dump(transcript, file)

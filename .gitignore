@@ -1,2 +1,8 @@
 __pycache__/
 .cache/
+
+.config.json
+config.json
+
+.DALGGAN_a_Multi_Horizon_Forecasting_Model.pdf
+DALGGAN_a_Multi_Horizon_Forecasting_Model.pdf
