@@ -1,5 +1,5 @@
 from helpers import TranscriptLength, TranscriptStyle, valid_styles, valid_lengths
-from system_prompts import map_step2_and_3_system_prompt
+from system_prompts import map_step2_system_prompt
 from typing import Any, Dict
 from mlx_lm import generate
 from pathlib import Path
@@ -59,13 +59,14 @@ def generate_transcript(
     input_text: str = None,
     length: TranscriptLength = None,
     style: TranscriptStyle = None,
+    format_type,
     max_tokens: int = 8126,
     temperature: float = 1
 ) -> str:
     """Generate podcast transcript using the model."""
     try:
         conversation = [
-            {"role": "system", "content": map_step2_and_3_system_prompt(length, style)},
+            {"role": "system", "content": map_step2_system_prompt(length=length, style=style, format_type=format_type)},
             {"role": "user", "content": input_text},
         ]
 
@@ -103,24 +104,6 @@ def step2(
     model_name: str = None,
     output_dir: str = None
 ) -> str:
-    """
-    Process cleaned text into a podcast transcript.
-    
-    Args:
-        client: Initialized API client
-        input_file: Path to the input text file
-        length: Desired transcript length ("short", "medium", "long", "very-long")
-        style: Desired transcript style ("friendly", "professional", "academic", "casual", "technical")
-        model_name: Name of the model to use
-        output_dir: Directory for output files
-        
-    Returns:
-        str of output_file_path
-        
-    Raises:
-        TranscriptError: For any transcript processing related errors
-        InvalidParameterError: For invalid length or style parameters
-    """
     try:
         if length not in valid_lengths:
             raise InvalidParameterError(f"Invalid length parameter. Must be one of: {valid_lengths}")
