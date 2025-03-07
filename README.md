@@ -358,7 +358,7 @@ BibTex entry:
   author = {Gökdeniz Gülmez},
   title = {{Local-NotebookLM}: A Local-NotebookLM to convert PDFs into Audio.},
   url = {https://github.com/Goekdeniz-Guelmez/Local-NotebookLM},
-  version = {0.1.0},
+  version = {0.1.5},
   year = {2025},
 }
 ```

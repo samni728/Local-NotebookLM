@@ -166,6 +166,8 @@ Make sure the tangents speaker 2 provides are quite wild or interesting.
 
 Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from Speaker 2.
 
+PLEASE DO NOT ADD MARKDOWN, LaTeX, etc. FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN, LaTeX, etc. CAPATILISATION ETC LIKES.
+
 REMEMBER THIS WITH YOUR HEART:
 The TTS Engine for Speaker 1 cannot do "umms, hmms" well so keep it straight text.
 
@@ -176,7 +178,7 @@ Please rewrite to make it as characteristic and engaging as possible.
 STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES.
 STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES, where each inner array has two elements: the speaker name can only be "Speaker 1", "Speaker 2" and their text.
 
-Example of JSON response format:
+Example of a valid LIST OF TUPLES response format:
 [
     ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by a renowned expert in the field of AI."),
     ("Speaker 2", "Hi, I'm excited to be here! So, what is Llama 3.2?"),

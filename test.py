@@ -6,9 +6,9 @@ success, result = podcast_processor(
     format_type="podcast",
     length="very-long",
     style="academic",
-    preference="Focus on the key technical aspects, and i want you to at least say the name of the creator of that architecture (Gökdeniz Gülmez) 5 times.",
+    preference="Focus on the key technical aspects, this podcast shoudl only be for Machine Learning researchers and engineers.",
     output_dir="./examples/test_output",
-    skip_to=4
+    skip_to=3
 )
 
 if success:

@@ -25,7 +25,7 @@ except FileNotFoundError:
             exec(f.read(), version)
     except FileNotFoundError:
         print("Warning: Could not find version.py in local_notebook/ either. Using default version.")
-        version["__version__"] = "0.1.0"  # Default version
+        version["__version__"] = "0.1.0"
 
 version = version.get("__version__", "0.1.0")
 
