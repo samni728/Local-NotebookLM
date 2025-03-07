@@ -1,34 +1,31 @@
-from ast import Tuple
-
-
-base_config: Tuple = {
-    "Co-Host-Speaker-Voice": "",
-    "Host-Speaker-Voice": "",
+{
+    "Co-Host-Speaker-Voice": "af_sky+af_bella",
+    "Host-Speaker-Voice": "af_alloy",
 
     "Small-Text-Model": {
         "provider": {
-            "name": "",
-            "key": ""
+            "name": "lmstudio",
+            "key": "not-needed"
         },
-        "model": ""
+        "model": "llama-3.2-1b-instruct"
     },
 
     "Big-Text-Model": {
         "provider": {
-            "name": "",
-            "key": ""
+            "name": "lmstudio",
+            "key": "not-needed"
         },
-        "model": ""
+        "model": "llama-3.2-3b-instruct"
     },
 
     "Text-To-Speech-Model": {
         "provider": {
-            "name": "",
-            "endpoint": "",
-            "key": ""
+            "name": "custom",
+            "endpoint": "http://localhost:8880/v1",
+            "key": "not-needed"
         },
-        "model": "",
-        "audio_format": ""
+        "model": "kokoro",
+        "audio_format": "wav"
     },
 
     "Step1": {
