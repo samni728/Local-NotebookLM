@@ -20,9 +20,9 @@ with open(str(root_dir / "local_notebook" / "version.py")) as f:
 
 # Setup configuration
 setup(
-    name="local-notebook",
+    name="Local-NotebookLM",
     version=version,
-    description="A local notebook implementation",
+    description="A Local-NotebookLM to convert PDFs into Audio.",
     long_description=open(root_dir / "README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     author="Gökdeniz Gülmez",

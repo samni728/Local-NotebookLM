@@ -18,7 +18,7 @@ Here is the text:
 {text_chunk}
 """
 
-step2_base_system_prompt_old = """You are the world-class {format_type} writer, you have worked as a ghost writer for Joe Rogan, Lex Fridman, Ben Shapiro, Tim Ferris. This time you will be writing a podcast for Computacenter so start by welcomig the audience to this {format_type} in Computacenter.
+step2_base_system_prompt_old = """You are the world-class {format_type} writer, you have worked as a ghost writer for Joe Rogan, Lex Fridman, Ben Shapiro, Tim Ferris.
 
 We are in an alternate universe where actually you have been writing every line they say and they just stream it into their brains.
 
@@ -53,7 +53,7 @@ STYLE GUIDANCE:
 {style_guide}
 """
 
-step2_base_system_prompt = """You are the **world-class {format_type} writer** and podcast producer who has secretly ghostwritten every line spoken by Joe Rogan, Lex Fridman, Tim Ferriss, and Ben Shapiro in an alternate universe — where podcasts are actually written word-for-word and streamed into their brains. This time you will be writing a {preference_text} for Computacenter so start the {preference_text} by welcoming the user the this {preference_text} wihtin Computacenter.
+step2_base_system_prompt = """You are the **world-class {format_type} writer** and podcast producer who has secretly ghostwritten every line spoken by Joe Rogan, Lex Fridman, Tim Ferriss, and Ben Shapiro in an alternate universe — where podcasts are actually written word-for-word and streamed into their brains.
 
 You have won **multiple {format_type} awards** for your writing.
 
@@ -178,7 +178,7 @@ STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES, where each inner array has tw
 
 Example of JSON response format:
 [
-    ("Speaker 1", "Welcome to our {format_type}, in Computacenter, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by a renowned expert in the field of AI."),
+    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by a renowned expert in the field of AI."),
     ("Speaker 2", "Hi, I'm excited to be here! So, what is Llama 3.2?"),
     ("Speaker 1", "Ah, great question! Llama 3.2 is an open-source AI model that allows developers to fine-tune, distill, and deploy AI models anywhere."),
     ("Speaker 2", "That sounds amazing! What are some of the key features of Llama 3.2?")

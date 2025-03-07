@@ -342,3 +342,21 @@ For more information, visit the [GitHub repository](https://github.com/Goekdeniz
 
 Best
 Gökdeniz Gülmez
+
+---
+
+## Citing Local-NotebookLM
+
+The Local-NotebookLM software suite was developed by Gökdeniz Gülmez. If you find Local-NotebookLM useful in your research and wish to cite it, please use the following
+BibTex entry:
+
+```text
+@software{
+  Local-NotebookLM,
+  author = {Gökdeniz Gülmez},
+  title = {{Local-NotebookLM}: A Local-NotebookLM to convert PDFs into Audio.},
+  url = {https://github.com/Goekdeniz-Guelmez/Local-NotebookLM},
+  version = {0.1.0},
+  year = {2025},
+}
+```
