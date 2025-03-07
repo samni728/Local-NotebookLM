@@ -1,7 +1,7 @@
+from .helpers import generate, FormatType, wait_for_next_step
 from typing import Optional, List, Dict, Any
 from .prompts import step1_prompt
 import logging, PyPDF2, os, time
-from .helpers import generate
 from pathlib import Path
 from tqdm import tqdm
 
@@ -109,12 +109,13 @@ def process_chunk(
         chunk_num,
         model_name,
         max_tokens,
-        temperature
+        temperature,
+        format_type
     ) -> str:
     try:
-        time.sleep(4)
+        wait_for_next_step()
         messages = [
-            {"role": "user", "content": step1_prompt.format(text_chunk=text_chunk)},
+            {"role": "user", "content": step1_prompt.format(text_chunk=text_chunk, format_type=format_type)},
         ]
         return generate(
             client=client,
@@ -132,6 +133,7 @@ def step1(
     client: Any = None,
     config: Optional[Dict[str, Any]] = None,
     output_dir: str = None,
+    format_type: FormatType = "podcast"
 ) -> str:
     try:
         output_dir = Path(output_dir)
@@ -162,6 +164,7 @@ def step1(
                     client=client,
                     text_chunk=chunk,
                     chunk_num=chunk_num,
+                    format_type=format_type,
                     model_name=config["Small-Text-Model"]["model"],
                     max_tokens=config["Step1"]["max_tokens"],
                     temperature=config["Step1"]["temperature"]

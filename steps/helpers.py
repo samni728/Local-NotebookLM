@@ -1,5 +1,6 @@
 from typing import Dict, Any, List, Optional, Literal
 from openai import OpenAI, AzureOpenAI
+import time
 
 FormatType = Literal[
     "podcast", "interview", "panel-discussion", "debate",
@@ -9,6 +10,9 @@ FormatType = Literal[
 ]
 LengthType = Literal["short", "medium", "long", "very-long"]
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
+
+def wait_for_next_step(seconds: float = 2):
+    time.sleep(seconds)
 
 def set_provider(
         provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'custom']] = None,

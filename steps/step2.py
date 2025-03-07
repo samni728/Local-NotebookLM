@@ -1,4 +1,4 @@
-from .helpers import generate, FormatType, LengthType, StyleType
+from .helpers import generate, wait_for_next_step, FormatType, LengthType, StyleType
 from .prompts import map_step2_system_prompt
 from typing import Any, Dict, Optional
 import logging, pickle, time
@@ -48,7 +48,7 @@ def generate_transcript(
     temperature
 ) -> str:
     try:
-        time.sleep(4)
+        wait_for_next_step()
         conversation = [
             {"role": "system", "content": map_step2_system_prompt(length=length, style=style, format_type=format_type)},
             {"role": "user", "content": input_text},
@@ -69,7 +69,7 @@ def step2(
     config: Optional[Dict[str, Any]] = None,
     input_file: str = None,
     output_dir: str = None,
-    format_type: FormatType = "summary",
+    format_type: FormatType = "podcast",
     length: LengthType = "medium",
     style: StyleType = "normal"
 ) -> str:

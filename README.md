@@ -10,6 +10,8 @@ A local AI-powered tool that converts PDF documents into engaging podcasts, usin
 - Text-to-Speech conversion with voice selection
 - Fully configurable pipeline
 - Preference-based content focus
+- Programmatic API for integration in other projects
+- FastAPI server for web-based access
 
 ## Prerequisites
 
@@ -154,13 +156,15 @@ The following provider options are supported:
 
 ## Usage
 
+### Command Line Interface
+
 Run the script with the following command:
 
 ```bash
 python main.py --pdf PATH_TO_PDF [options]
 ```
 
-### Available Options
+#### Available Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
@@ -172,7 +176,7 @@ python main.py --pdf PATH_TO_PDF [options]
 | `--preference` | Additional focus preferences or instructions | None |
 | `--output-dir` | Directory to store output files | ./output |
 
-### Example Commands
+#### Example Commands
 
 Basic usage:
 ```bash
@@ -193,6 +197,39 @@ Using custom config:
 ```bash
 python start.py --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast
 ```
+
+### Programmatic API
+
+You can also use Local-NotebookLM programmatically in your Python code:
+
+```python
+from processor import podcast_processor
+
+success, result = podcast_processor(
+    pdf_path="documents/research_paper.pdf",
+    config_path="config.json",
+    format_type="interview",
+    length="long",
+    style="professional",
+    preference="Focus on the key technical aspects",
+    output_dir="./test_output"
+)
+
+if success:
+    print(f"Successfully generated podcast: {result}")
+else:
+    print(f"Failed to generate podcast: {result}")
+```
+
+### FastAPI Server
+
+Start the FastAPI server to access the functionality via a web API:
+
+```bash
+python server.py
+```
+
+By default, the server runs on http://localhost:8000. You can access the API documentation at http://localhost:8000/docs.
 
 ## Pipeline Steps
 
@@ -276,12 +313,10 @@ If you encounter issues not covered here, please:
 - soundfile
 - requests
 - pathlib
+- fastapi
+- uvicorn
 
 Full requirements are listed in `requirements.txt`.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 

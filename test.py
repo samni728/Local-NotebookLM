@@ -1,5 +1,16 @@
-from steps.helpers import read_config
+from processor import podcast_processor
 
-conf = read_config('config.yaml')
+success, result = podcast_processor(
+    pdf_path="JOSIEv4o.pdf",
+    config_path="config.json",
+    format_type="interview",
+    length="long",
+    style="professional",
+    preference="Focus on the key technical aspects",
+    output_dir="./test_output"
+)
 
-print(conf['Step1']['model_name'])
+if success:
+    print(f"Successfully generated podcast: {result}")
+else:
+    print(f"Failed to generate podcast: {result}")

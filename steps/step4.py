@@ -1,4 +1,5 @@
 from typing import List, Tuple, Dict, Any, Optional
+from helpers import wait_for_next_step
 import logging, pickle, ast, re, time
 from pathlib import Path
 import soundfile as sf
@@ -54,6 +55,7 @@ def generate_speaker_audio(
     response_format
 ) -> None:
     try:
+        wait_for_next_step()
         with client.audio.speech.with_streaming_response.create(
             model=model_name, 
             voice=voice,
@@ -61,9 +63,6 @@ def generate_speaker_audio(
             response_format=response_format
         ) as response:
             response.stream_to_file(str(output_path))
-        
-        time.sleep(4)
-        
     except Exception as e:
         raise AudioGenerationError(f"Failed to generate audio: {str(e)}")
 

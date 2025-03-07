@@ -1,9 +1,9 @@
+from .helpers import generate, FormatType, wait_for_next_step
 from .prompts import step3_system_prompt
-from .helpers import generate, FormatType
 from typing import Dict, Any, Optional
+import logging, pickle, time
 from ast import literal_eval
 from pathlib import Path
-import logging, pickle
 
 
 logger = logging.getLogger(__name__)
@@ -35,6 +35,7 @@ def generate_rewritten_transcript(
     temperature
 ) -> str:
     try:
+        wait_for_next_step()
         conversation = [
             {"role": "system", "content": step3_system_prompt},
             {"role": "user", "content": input_text},
