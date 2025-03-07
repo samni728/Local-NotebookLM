@@ -1,5 +1,10 @@
 from pathlib import Path
 from setuptools import find_packages, setup
+import sys
+
+# Add the project root to the path so we can import the version
+sys.path.insert(0, str(Path(__file__).parent))
+from local_notebooklm.version import __version__
 
 # Get the project root directory
 root_dir = Path(__file__).parent
@@ -13,11 +18,10 @@ else:
     print("Warning: requirements.txt not found. Proceeding without dependencies.")
     requirements = []
 
-
 # Setup configuration
 setup(
     name="Local-NotebookLM",
-    version="0.1.5",
+    version=__version__,  # Use version from version.py
     description="A Local-NotebookLM to convert PDFs into Audio.",
     long_description=open(root_dir / "README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",

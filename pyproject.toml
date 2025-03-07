@@ -3,8 +3,8 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "local-notebook"
-version = "0.1.0"  # You can set this directly or use dynamic version from your code
+name = "local-notebooklm"
+dynamic = ["version"]  # Mark version as dynamic
 description = "A local notebook implementation"
 readme = "README.md"
 authors = [
@@ -20,6 +20,9 @@ requires-python = ">=3.12"
 dependencies = [
     # You can list dependencies here directly or use dynamic deps from requirements.txt
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "local_notebook.version.__version__"}  # Adjust this path to match your actual module structure
 
 [project.urls]
 "Homepage" = "https://github.com/Goekdeniz-Guelmez//Local-NotebookLM"
