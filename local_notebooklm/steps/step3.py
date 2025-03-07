@@ -188,7 +188,7 @@ def step3(
             file.write(transcript, file)
 
         logger.info(f"Rewritten transcript saved to: {output_file}")
-        return str(input_file), str(output_file)
+        return str(input_file), str(f'{output_file}.pkl')
 
     except (FileReadError, TranscriptGenerationError, InvalidParameterError) as e:
         logger.error(f"Transcript rewriting failed: {str(e)}")
