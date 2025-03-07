@@ -100,12 +100,14 @@ You can use the default configuration or create a custom JSON config file with t
 
     "Step2": {
         "max_tokens": 8126,
-        "temperature": 1
+        "temperature": 1,
+        "chunk_token_limit": 2000
     },
 
     "Step3": {
         "max_tokens": 8126,
-        "temperature": 1
+        "temperature": 1,
+        "chunk_token_limit": 2000
     }
 }
 ```
