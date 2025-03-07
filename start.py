@@ -3,13 +3,6 @@ import argparse, sys
 from processor import podcast_processor
 
 def main():
-    """
-    Command-line entry point for the podcast generator.
-    Parses arguments and calls the process_podcast function.
-    
-    Returns:
-        int: Exit code (0 for success, 1 for failure)
-    """
     parser = argparse.ArgumentParser(description="Generate a podcast from a PDF document")
     
     # Required arguments

@@ -16,22 +16,6 @@ def podcast_processor(
     output_dir="./output",
     skip_to=None
 ):
-    """
-    Generate a podcast from a PDF document.
-    
-    Args:
-        pdf_path (str): Path to the PDF file
-        config_path (str, optional): Path to a custom config file
-        format_type (str, optional): Output format type
-        length (str, optional): Content length
-        style (str, optional): Content style
-        preference (str, optional): Additional preferences or instructions
-        output_dir (str, optional): Directory to store output files
-        skip_to (int, optional): Skip to a specific step (1-4)
-        
-    Returns:
-        tuple: (success_flag (bool), output_audio_path or error_message (str))
-    """
     # Load config
     if config_path:
         import json
