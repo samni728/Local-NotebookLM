@@ -5,3 +5,6 @@ soundfile
 fastapi
 uvicorn
 python-multipart
+numpy
+requests
+pathlib

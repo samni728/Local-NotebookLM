@@ -24,6 +24,14 @@ A local AI-powered tool that converts PDF documents into engaging podcasts, usin
 
 ## Installation
 
+### From PyPI
+
+```bash
+pip install Local-NotebookLM
+```
+
+### From source
+
 1. Clone the repository:
 
 ```bash
