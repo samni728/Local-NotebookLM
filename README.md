@@ -166,7 +166,7 @@ The following provider options are supported:
 Run the script with the following command:
 
 ```bash
-python main.py --pdf PATH_TO_PDF [options]
+python -m local_notebooklm.start --pdf PATH_TO_PDF [options]
 ```
 
 #### Available Options
@@ -185,22 +185,22 @@ python main.py --pdf PATH_TO_PDF [options]
 
 Basic usage:
 ```bash
-python start.py --pdf documents/research_paper.pdf
+python -m local_notebooklm.start --pdf documents/research_paper.pdf
 ```
 
 Customized podcast:
 ```bash
-python start.py --pdf documents/research_paper.pdf --format podcast --length long --style casual
+python -m local_notebooklm.start --pdf documents/research_paper.pdf --format podcast --length long --style casual
 ```
 
 With custom preferences:
 ```bash
-python start.py --pdf documents/research_paper.pdf --preference "Focus on practical applications and real-world examples"
+python -m local_notebooklm.start --pdf documents/research_paper.pdf --preference "Focus on practical applications and real-world examples"
 ```
 
 Using custom config:
 ```bash
-python start.py --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast
+python -m local_notebooklm.start --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast
 ```
 
 ### Programmatic API
@@ -208,7 +208,7 @@ python start.py --pdf documents/research_paper.pdf --config custom_config.json -
 You can also use Local-NotebookLM programmatically in your Python code:
 
 ```python
-from processor import podcast_processor
+from local_notebooklm.processor import podcast_processor
 
 success, result = podcast_processor(
     pdf_path="documents/research_paper.pdf",
@@ -231,7 +231,7 @@ else:
 Start the FastAPI server to access the functionality via a web API:
 
 ```bash
-python server.py
+ python -m local_notebooklm.server
 ```
 
 By default, the server runs on http://localhost:8000. You can access the API documentation at http://localhost:8000/docs.
