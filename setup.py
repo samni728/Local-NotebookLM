@@ -15,7 +15,7 @@ else:
 
 # Import the version from the package
 version = {}
-with open(str(root_dir / "local_notebook" / "version.py")) as f:
+with open(str("local_notebooklm" / "version.py")) as f:
     exec(f.read(), version)
 
 # Setup configuration
