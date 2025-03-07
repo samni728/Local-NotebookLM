@@ -21,7 +21,7 @@ try:
 except FileNotFoundError:
     print("Warning: Could not find version.py in local_notebooklm/")
     try:
-        with open("local_notebook/version.py") as f:
+        with open("local_notebooklm/version.py") as f:
             exec(f.read(), version)
     except FileNotFoundError:
         print("Warning: Could not find version.py in local_notebook/ either. Using default version.")
