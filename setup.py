@@ -1,6 +1,5 @@
 from pathlib import Path
 from setuptools import find_packages, setup
-from local_notebooklm.version import __version__ as version
 
 # Get the project root directory
 root_dir = Path(__file__).parent
@@ -18,7 +17,7 @@ else:
 # Setup configuration
 setup(
     name="Local-NotebookLM",
-    version=version,
+    version="0.1.5",
     description="A Local-NotebookLM to convert PDFs into Audio.",
     long_description=open(root_dir / "README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
