@@ -1,4 +1,4 @@
-from .helpers import generate, FormatType, wait_for_next_step
+from .helpers import generate, FormatType, StyleType, LengthType, wait_for_next_step
 from .prompts import step3_system_prompt
 from typing import Dict, Any, Optional
 import logging, pickle, time
@@ -32,12 +32,14 @@ def generate_rewritten_transcript(
     model_name,
     input_text,
     max_tokens,
-    temperature
+    temperature,
+    format_type,
+    preference_text
 ) -> str:
     try:
         wait_for_next_step()
         conversation = [
-            {"role": "system", "content": step3_system_prompt},
+            {"role": "system", "content": step3_system_prompt.format(format_type=format_type, preference_text=preference_text)},
             {"role": "user", "content": input_text},
         ]
         return generate(
@@ -46,6 +48,7 @@ def generate_rewritten_transcript(
             messages=conversation,
             max_tokens=max_tokens,
             temperature=temperature,
+            # format=True
         )
 
     except Exception as e:
@@ -85,10 +88,6 @@ def step3(
             preference_text = ""
 
         logger.info(f"Optimizing transcript for TTS...")
-        system_prompt = step3_system_prompt.format(
-            format_type=format_type,
-            preference_text=preference_text
-        )
 
         # Generate rewritten transcript
         logger.info(f"Generating rewritten transcript...")
@@ -96,6 +95,8 @@ def step3(
             client=client,
             model_name=config["Big-Text-Model"]["model"],
             input_text=input_text,
+            format_type=format_type,
+            preference_text=preference_text,
             max_tokens=config["Step3"]["max_tokens"],
             temperature=config["Step1"]["temperature"]
         )

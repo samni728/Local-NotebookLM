@@ -79,12 +79,22 @@ def generate (
     messages: Optional[List[Dict]] = None,
     model: str = "gpt-4o-mini",
     max_tokens: int = 512,
-    temperature: float = 0.7
+    temperature: float = 0.7,
+    format: bool = False
 ) -> str:
-    response = client.chat.completions.create(
+    if format:
+        response = client.chat.completions.create(
         model=model,
         messages=messages,
         max_tokens=max_tokens,
         temperature=temperature,
+        response_format={"type": "json_object"}
     )
+    else:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+        )
     return response.choices[0].message.content

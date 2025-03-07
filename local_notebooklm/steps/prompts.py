@@ -10,7 +10,7 @@ Remember DO NOT START SUMMARIZING THIS, YOU ARE ONLY CLEANING UP THE TEXT AND RE
 
 Be very smart and aggressive with removing details, you will get a running portion of the text and keep returning the processed text.
 
-PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES
+PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES, IF ITS POSSIBEL ADD METADATA LIKE THE AUTHOR.
 
 ALWAYS start your response directly with processed text and NO ACKNOWLEDGEMENTS about my questions ok?
 Here is the text:
@@ -18,7 +18,7 @@ Here is the text:
 {text_chunk}
 """
 
-step2_base_system_prompt_old = """You are the a world-class {format_type} writer, you have worked as a ghost writer for Joe Rogan, Lex Fridman, Ben Shapiro, Tim Ferris. This time you will be writing a podcast for Computacenter.
+step2_base_system_prompt_old = """You are the world-class {format_type} writer, you have worked as a ghost writer for Joe Rogan, Lex Fridman, Ben Shapiro, Tim Ferris. This time you will be writing a podcast for Computacenter so start by welcomig the audience to this {format_type} in Computacenter.
 
 We are in an alternate universe where actually you have been writing every line they say and they just stream it into their brains.
 
@@ -42,6 +42,15 @@ ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1:
 DO NOT GIVE EPISODE TITLES SEPERATELY, LET SPEAKER 1 TITLE IT IN HER SPEECH
 DO NOT GIVE CHAPTER TITLES
 IT SHOULD STRICTLY BE THE DIALOGUES
+
+FORMAT GUIDANCE:
+{format_guide}
+
+LENGTH GUIDANCE:
+{length_guide}
+
+STYLE GUIDANCE:
+{style_guide}
 """
 
 step2_base_system_prompt = """You are the **world-class {format_type} writer** and podcast producer who has secretly ghostwritten every line spoken by Joe Rogan, Lex Fridman, Tim Ferriss, and Ben Shapiro in an alternate universe — where podcasts are actually written word-for-word and streamed into their brains. This time you will be writing a {preference_text} for Computacenter so start the {preference_text} by welcoming the user the this {preference_text} wihtin Computacenter.
@@ -120,6 +129,8 @@ Use the `<scratchpad>` silently to brainstorm:
 - Conspiracies
 - How to explain something using **the weirdest analogy possible**  
 
+
+ALWAYS AND ONLY USE THE SPEAKER NAMES FOR THE TURNS e.g. Speaker 1 and Speaker 2
 ---
 
 FORMAT GUIDANCE:
@@ -162,9 +173,10 @@ For Speaker 2 use "umm, hmm" as much as possible, along with [sigh] and [laughs]
 
 Please rewrite to make it as characteristic and engaging as possible.
 
-STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES:
+STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES.
+STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES, where each inner array has two elements: the speaker name can only be "Speaker 1", "Speaker 2" and their text.
 
-Example of response:
+Example of JSON response format:
 [
     ("Speaker 1", "Welcome to our {format_type}, in Computacenter, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by a renowned expert in the field of AI."),
     ("Speaker 2", "Hi, I'm excited to be here! So, what is Llama 3.2?"),
@@ -172,14 +184,7 @@ Example of response:
     ("Speaker 2", "That sounds amazing! What are some of the key features of Llama 3.2?")
 ]
 
-FORMAT GUIDANCE:
-{format_guide}
-
-LENGTH GUIDANCE:
-{length_guide}
-
-STYLE GUIDANCE:
-{style_guide}
+Your response must be valid LIST OF TUPLES following the format above.
 """
 
 def get_length_guide(length, format_type) -> str:
@@ -229,3 +234,8 @@ def map_step2_system_prompt(length, style, format_type, preference_text) -> str:
     style_guide = get_style_guide(style)
     format_guide = get_format_guide(format_type)
     return step2_base_system_prompt.format(format_type=format_type, preference_text=preference_text, format_guide=format_guide, length_guide=length_guide, style_guide=style_guide)
+
+
+def map_step3_system_prompt(format_type, preference_text) -> str:
+    return step2_base_system_prompt.format(format_type=format_type, preference_text=preference_text)
+

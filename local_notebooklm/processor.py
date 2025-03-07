@@ -83,7 +83,7 @@ def podcast_processor(
         else:
             # If skipping, find the most recent output file from step2
             print("Skipping Step 2, looking for existing output...")
-            step2_files = list(output_dirs["step2"].glob("*.txt"))
+            step2_files = list(output_dirs["step2"].glob("*.pkl"))
             if step2_files:
                 transcript_file = str(sorted(step2_files, key=lambda x: x.stat().st_mtime, reverse=True)[0])
                 print(f"Using existing file from Step 2: {transcript_file}")
@@ -100,7 +100,8 @@ def podcast_processor(
                 config=config,
                 input_file=transcript_file,
                 output_dir=str(output_dirs["step3"]),
-                preference_text=preference
+                preference_text=preference,
+                format_type=format_type
             )
         else:
             print("Skipping Step 3, assuming files exist in output directory...")
