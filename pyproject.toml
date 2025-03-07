@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-notebook"
+version = "0.1.0"  # You can set this directly or use dynamic version from your code
+description = "A local notebook implementation"
+readme = "README.md"
+authors = [
+    {name = "Gökdeniz Gülmez", email = "goekdenizguelmez@gmail.com"}
+]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.12"
+dependencies = [
+    # You can list dependencies here directly or use dynamic deps from requirements.txt
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Goekdeniz-Guelmez//Local-NotebookLM"
+"Bug Tracker" = "https://github.com/Goekdeniz-Guelmez//Local-NotebookLM/issues"
+
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+select = ["E", "F", "B"]
+ignore = []
+line-length = 88
+target-version = "py312"

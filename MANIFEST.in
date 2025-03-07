@@ -1,0 +1,27 @@
+# Include license and readme
+include LICENSE
+include README.md
+
+# Include requirements files
+include requirements.txt
+include requirements-dev.txt
+
+# Include documentation
+recursive-include docs *
+
+# Include examples
+recursive-include examples *
+
+# Include tests
+recursive-include tests *
+
+# Exclude development and CI/CD configurations
+exclude .pre-commit-config.yaml
+exclude .gitignore
+recursive-exclude .github *
+
+# Exclude cache files
+global-exclude __pycache__/*
+global-exclude *.py[cod]
+global-exclude *.so
+global-exclude .DS_Store
