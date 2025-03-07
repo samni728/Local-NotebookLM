@@ -6,3 +6,6 @@ config.json
 
 .examples/test_output
 examples/test_output
+
+.test.text
+test.text
