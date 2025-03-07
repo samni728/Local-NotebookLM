@@ -176,22 +176,22 @@ python main.py --pdf PATH_TO_PDF [options]
 
 Basic usage:
 ```bash
-python main.py --pdf documents/research_paper.pdf
+python start.py --pdf documents/research_paper.pdf
 ```
 
 Customized podcast:
 ```bash
-python main.py --pdf documents/research_paper.pdf --format podcast --length long --style casual
+python start.py --pdf documents/research_paper.pdf --format podcast --length long --style casual
 ```
 
 With custom preferences:
 ```bash
-python main.py --pdf documents/research_paper.pdf --preference "Focus on practical applications and real-world examples"
+python start.py --pdf documents/research_paper.pdf --preference "Focus on practical applications and real-world examples"
 ```
 
 Using custom config:
 ```bash
-python main.py --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast
+python start.py --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast
 ```
 
 ## Pipeline Steps
