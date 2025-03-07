@@ -1,7 +1,7 @@
 from processor import podcast_processor
 
 success, result = podcast_processor(
-    pdf_path="JOSIEv4o.pdf",
+    pdf_path="examples/JOSIEv4o.pdf",
     config_path="config.json",
     format_type="interview",
     length="long",

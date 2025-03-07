@@ -56,8 +56,9 @@ Speaker 1: Leads the conversation and teaches the speaker 2, gives incredible an
 
 Speaker 2: Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions.
 
-USER PREFERENCES:
+MY PREFERENCES:
 {preference_text}
+
 The speakers should specifically focus on these preferences and emphasize them throughout the conversation. If no preferences are provided, continue with the general topic of the transcript.
 
 Make sure the tangents speaker 2 provides are quite wild or interesting.

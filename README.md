@@ -12,6 +12,7 @@ A local AI-powered tool that converts PDF documents into engaging podcasts, usin
 - Preference-based content focus
 - Programmatic API for integration in other projects
 - FastAPI server for web-based access
+- Example podcast included for demonstration
 
 ## Prerequisites
 
@@ -30,7 +31,7 @@ git clone https://github.com/Goekdeniz-Guelmez/Local-NotebookLM.git
 cd Local-NotebookLM
 ```
 
-2. Create and activate a virtual environment:
+2. Create and activate a virtual environment (conda works too):
 
 ```bash
 python -m venv venv
@@ -42,6 +43,10 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+
+## Example Output
+
+The repository includes an example podcast in `examples/podcast.wav` to demonstrate the quality and format of the output. The models used are: gpt4o and Mini with tts-hs on Azure. You can listen to this example to get a sense of what Local-NotebookLM can produce before running it on your own PDFs.
 
 ## Configuration
 
@@ -326,3 +331,6 @@ Full requirements are listed in `requirements.txt`.
 ---
 
 For more information, visit the [GitHub repository](https://github.com/Goekdeniz-Guelmez/Local-NotebookLM).
+
+Best
+Gökdeniz Gülmez
