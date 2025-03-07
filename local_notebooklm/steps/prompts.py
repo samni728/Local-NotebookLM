@@ -10,7 +10,7 @@ Remember DO NOT START SUMMARIZING THIS, YOU ARE ONLY CLEANING UP THE TEXT AND RE
 
 Be very smart and aggressive with removing details, you will get a running portion of the text and keep returning the processed text.
 
-PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES, IF ITS POSSIBEL ADD METADATA LIKE THE AUTHOR.
+PLEASE DO NOT ADD MARKDOWN FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN CAPATILISATION ETC LIKES.
 
 ALWAYS start your response directly with processed text and NO ACKNOWLEDGEMENTS about my questions ok?
 Here is the text:

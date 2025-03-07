@@ -46,21 +46,74 @@ def generate_transcript(
     format_type,
     preference_text,
     max_tokens,
-    temperature
+    temperature,
+    chunk_token_limit  # New parameter from config
 ) -> str:
     try:
         wait_for_next_step()
-        conversation = [
-            {"role": "system", "content": map_step2_system_prompt(length=length, style=style, format_type=format_type, preference_text=preference_text)},
-            {"role": "user", "content": input_text},
-        ]
-        return generate(
-            client=client,
-            model=model_name,
-            messages=conversation,
-            max_tokens=max_tokens,
-            temperature=temperature,
-        )
+        
+        # More conservative token estimation (3.5 chars per token)
+        estimated_tokens = len(input_text) // 3.5
+        
+        # If input is likely too long, split it into chunks
+        if estimated_tokens > chunk_token_limit:
+            # Convert token count to character count for chunking
+            chunk_size = int(chunk_token_limit * 3.5)
+            chunks = [input_text[i:i+chunk_size] for i in range(0, len(input_text), chunk_size)]
+            logger.info(f"Input split into {len(chunks)} chunks (chunk_token_limit: {chunk_token_limit})")
+            
+            # First chunk - generate the beginning of the transcript
+            short_system_prompt = f"Create a {length} {style} {format_type} transcript. {preference_text}"
+            
+            conversation = [
+                {"role": "system", "content": short_system_prompt},
+                {"role": "user", "content": f"Create the beginning of a {format_type} transcript based on this content (part 1/{len(chunks)}): {chunks[0]}"},
+            ]
+            
+            transcript = generate(
+                client=client,
+                model=model_name,
+                messages=conversation,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
+            
+            # Process remaining chunks
+            for i, chunk in enumerate(chunks[1:], 2):
+                # Add delay between API calls
+                time.sleep(3)
+                
+                # Very minimal prompt to save tokens
+                conversation = [
+                    {"role": "system", "content": f"Continue the {format_type} transcript without repeating introductions."},
+                    {"role": "user", "content": f"Continue the transcript with part {i}/{len(chunks)}: {chunk}"}
+                ]
+                
+                next_part = generate(
+                    client=client,
+                    model=model_name,
+                    messages=conversation,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                )
+                
+                transcript += "\n" + next_part
+            
+            return transcript
+        else:
+            # Original behavior for texts that fit within token limits
+            system_prompt = map_step2_system_prompt(length=length, style=style, format_type=format_type, preference_text=preference_text)
+            conversation = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": input_text},
+            ]
+            return generate(
+                client=client,
+                model=model_name,
+                messages=conversation,
+                max_tokens=max_tokens,
+                temperature=temperature,
+            )
 
     except Exception as e:
         raise TranscriptGenerationError(f"Failed to generate transcript: {str(e)}")
@@ -82,6 +135,9 @@ def step2(
         logger.info(f"Reading input file: {input_file}")
         input_text = read_input_file(input_file)
 
+        # Get chunk token limit from config, with a default fallback
+        chunk_token_limit = config["Step2"].get("chunk_token_limit", 2000)
+        
         logger.info(f"Generating {length} {style} transcript...")
         transcript = generate_transcript(
             client=client,
@@ -92,7 +148,8 @@ def step2(
             style=style,
             preference_text=preference_text,
             max_tokens=config["Step2"]["max_tokens"],
-            temperature=config["Step2"]["temperature"]
+            temperature=config["Step2"]["temperature"],
+            chunk_token_limit=chunk_token_limit  # Pass the new parameter
         )
 
         output_file = output_dir / 'data.pkl'

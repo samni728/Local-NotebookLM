@@ -6,7 +6,7 @@ FormatType = Literal[
     "podcast", "interview", "panel-discussion", "debate",
     "summary", "narration", "storytelling", "explainer",
     "lecture", "tutorial", "q-and-a",
-    "news-report", "executive-brief", "meeting-minutes", "analysis",
+    "news-report", "executive-brief", "meeting-minutes", "analysis"
 ]
 LengthType = Literal["short", "medium", "long", "very-long"]
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
