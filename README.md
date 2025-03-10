@@ -1,5 +1,7 @@
 # Local-NotebookLM
 
+![logo](logo.jpeg)
+
 A local AI-powered tool that converts PDF documents into engaging podcasts, using local LLMs and TTS models.
 
 ## Features
@@ -96,6 +98,7 @@ You can use the default configuration or create a custom JSON config file with t
     },
 
     "Step1": {
+        "system": "",
         "max_tokens": 1028,
         "temperature": 0.7,
         "chunk_size": 1000,
@@ -103,6 +106,7 @@ You can use the default configuration or create a custom JSON config file with t
     },
 
     "Step2": {
+        "system": "",
         "max_tokens": 8126,
         "temperature": 1,
         "chunk_token_limit": 2000,
@@ -110,6 +114,7 @@ You can use the default configuration or create a custom JSON config file with t
     },
 
     "Step3": {
+        "system": "",
         "max_tokens": 8126,
         "temperature": 1,
         "chunk_token_limit": 2000,
