@@ -3,8 +3,8 @@ from local_notebooklm.processor import podcast_processor
 success, result = podcast_processor(
     pdf_path="examples/DALGGAN.pdf",
     config_path="config.json",
-    format_type="podcast",
-    length="very-long",
+    format_type="summary",
+    length="short",
     style="academic",
     preference="Focus on the key technical aspects, this podcast shoudl only be for Machine Learning researchers and engineers.",
     output_dir="./examples/test_output",

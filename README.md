@@ -213,6 +213,29 @@ python -m local_notebooklm.start --pdf PATH_TO_PDF [options]
 | `--preference` | Additional focus preferences or instructions | None |
 | `--output-dir` | Directory to store output files | ./output |
 
+#### Format Types
+
+Local-NotebookLM now supports both single-speaker and two-speaker formats:
+
+**Single-Speaker Formats:**
+- summary
+- narration
+- storytelling
+- explainer
+- lecture
+- tutorial
+- news-report
+- executive-brief
+- analysis
+
+**Two-Speaker Formats:**
+- podcast
+- interview
+- panel-discussion
+- debate
+- q-and-a
+- meeting
+
 #### Example Commands
 
 Basic usage:
