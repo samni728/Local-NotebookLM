@@ -31,14 +31,19 @@ def generate_rewritten_transcript(
     client,
     model_name,
     input_text,
+    system_prompt,
     max_tokens,
     temperature,
     format_type,
 ) -> str:
     try:
         wait_for_next_step()
+        if system_prompt == None:
+            system_prompt = map_step3_system_prompt(format_type=format_type)
+        else:
+            system_prompt = system_prompt
         conversation = [
-            {"role": "system", "content": map_step3_system_prompt(format_type=format_type)},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": input_text},
         ]
         return generate_text(
@@ -59,6 +64,7 @@ def generate_rewritten_transcript_with_overlap(
     max_tokens,
     temperature,
     format_type,
+    system_prompt,
     chunk_size=8000,
     overlap_percent=20
 ) -> str:
@@ -98,7 +104,10 @@ def generate_rewritten_transcript_with_overlap(
                 context += "\n\nThis is the final part of the conversation. You may conclude naturally if appropriate."
             
             # Customize system prompt based on chunk position
-            chunk_system_prompt = map_step3_system_prompt(format_type=format_type)
+            if system_prompt == None:
+                chunk_system_prompt = map_step3_system_prompt(format_type=format_type)
+            else:
+                chunk_system_prompt = system_prompt
             if not is_final_chunk:
                 chunk_system_prompt += "\n\nIMPORTANT: Since this is not the final part of the conversation, DO NOT include any goodbyes, conclusions, or wrap-ups. The conversation should continue naturally."
             
@@ -182,6 +191,7 @@ def step3(
     input_file: str = None,
     output_dir: str = None,
     format_type: FormatType = "summary",
+    system_prompt: str = None
 ) -> str:
     try:
         output_dir = Path(output_dir)
@@ -205,6 +215,7 @@ def step3(
                 model_name=config["Big-Text-Model"]["model"],
                 input_text=input_text,
                 format_type=format_type,
+                system_prompt=system_prompt,
                 max_tokens=config["Step3"]["max_tokens"],
                 temperature=config["Step1"]["temperature"],
                 chunk_size=config["Step3"].get("chunk_size", 8000),
@@ -215,6 +226,7 @@ def step3(
             logger.info(f"Generating rewritten transcript...")
             transcript = generate_rewritten_transcript(
                 client=client,
+                system_prompt=system_prompt,
                 model_name=config["Big-Text-Model"]["model"],
                 input_text=input_text,
                 format_type=format_type,
