@@ -200,7 +200,7 @@ gen_z_mapping_prompt = """Infuse humor, pop culture references, and a very laid-
 - **Main Character Energy** – When someone acts like they’re the star of a movie (e.g., 'Walking through the city with my music on, main character energy.')
 - **Side Questing** – Doing random, unnecessary things instead of real goals (e.g., 'I should be studying, but I’m side questing at Target.')
 - **It’s Giving** – When something has a certain vibe (e.g., 'That outfit? It’s giving rich auntie.')
-- **No Diddy** – Absolutely not, no chance (e.g., 'You think I’m paying for your food? No diddy.')
+- **No Diddy** – When something could be interpreted in a way that's too "sus" (gay), you say "No Diddy" to clarify (e.g., 'I want some meat in my mouth, No Diddy').
 - **Zesty** – Someone acting extra flamboyant or over-the-top (e.g., 'Bro was moving kinda zesty.')
 - **Looking Ahh** – Used to roast someone’s appearance, usually exaggerating (e.g., 'Boy, you got that school lunch tray-looking ahh haircut.')
 
