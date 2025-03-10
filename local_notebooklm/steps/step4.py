@@ -1,6 +1,6 @@
+from .helpers import wait_for_next_step, generate_speech
 from typing import List, Tuple, Dict, Any, Optional
-from .helpers import wait_for_next_step
-import logging, pickle, ast, re, time
+import logging, pickle, ast, re
 from pathlib import Path
 import soundfile as sf
 from tqdm import tqdm
@@ -56,13 +56,7 @@ def generate_speaker_audio(
 ) -> None:
     try:
         wait_for_next_step()
-        with client.audio.speech.with_streaming_response.create(
-            model=model_name, 
-            voice=voice,
-            input=text,
-            response_format=response_format
-        ) as response:
-            response.stream_to_file(str(output_path))
+        generate_speaker_audio(client=client, model_name=model_name, text=text, output_path=output_path, voice=voice, response_format=response_format)
     except Exception as e:
         raise AudioGenerationError(f"Failed to generate audio: {str(e)}")
 
