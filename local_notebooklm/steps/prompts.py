@@ -32,7 +32,9 @@ Speaker 1: Leads the conversation and teaches the speaker 2, gives incredible an
 
 Speaker 2: Keeps the conversation on track by asking follow up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions
 
-Make sure the tangents speaker 2 provides are quite wild or interesting. 
+Make sure the tangents speaker 2 provides are quite wild or interesting.
+
+The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
 
 Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from the second speaker. 
 
@@ -155,6 +157,8 @@ Speaker 1: Leads the conversation and teaches the speaker 2, gives incredible an
 
 Speaker 2: Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions.
 
+The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
+
 MY PREFERENCES:
 "{preference_text}"
 
@@ -166,8 +170,6 @@ Make sure the tangents speaker 2 provides are quite wild or interesting.
 
 Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from Speaker 2.
 
-PLEASE DO NOT ADD MARKDOWN, LaTeX, etc. FORMATTING, STOP ADDING SPECIAL CHARACTERS THAT MARKDOWN, LaTeX, etc. CAPATILISATION ETC LIKES.
-
 REMEMBER THIS WITH YOUR HEART:
 The TTS Engine for Speaker 1 cannot do "umms, hmms" well so keep it straight text.
 
@@ -178,9 +180,9 @@ Please rewrite to make it as characteristic and engaging as possible.
 STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES.
 STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES, where each inner array has two elements: the speaker name can only be "Speaker 1", "Speaker 2" and their text.
 
-Example of a valid LIST OF TUPLES response format:
+Example of JSON response format:
 [
-    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by a renowned expert in the field of AI."),
+    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by my Co-Host."),
     ("Speaker 2", "Hi, I'm excited to be here! So, what is Llama 3.2?"),
     ("Speaker 1", "Ah, great question! Llama 3.2 is an open-source AI model that allows developers to fine-tune, distill, and deploy AI models anywhere."),
     ("Speaker 2", "That sounds amazing! What are some of the key features of Llama 3.2?")
