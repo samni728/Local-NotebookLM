@@ -434,8 +434,8 @@ The pipeline generates the following files:
 - `step1/clean_extracted_text.txt`: Cleaned and processed text
 - `step2/data.pkl`: Initial transcript data
 - `step3/podcast_ready_data.pkl`: TTS-optimized conversation data
-- `step3/segments/podcast_segment_*.wav`: Individual audio segments
-- `step3/podcast.wav`: Final concatenated podcast audio file
+- `step4/segments/podcast_segment_*.wav`: Individual audio segments
+- `step4/podcast.wav`: Final concatenated podcast audio file
 
 ## Troubleshooting
 
