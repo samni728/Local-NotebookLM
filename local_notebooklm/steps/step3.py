@@ -190,6 +190,10 @@ def step3(
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
 
+        input_path = input_file
+        if not input_file.endswith('.pkl'):
+            input_path = f"{input_path}.pkl"
+
         # Read input file
         logger.info(f"Reading input file: {input_file}")
         input_text = read_pickle_file(input_file)
