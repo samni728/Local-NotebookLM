@@ -51,7 +51,11 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
-
+## Optional pre requisites
+### Local TTS server
+- Follow one installation type (docker, docker-compose, uv) at https://github.com/remsky/Kokoro-FastAPI
+- Test in your browser that http://localhost:8880/v1 return the json: {"detail":"Not Found"}
+  
 ## Example Output
 
 The repository includes an example podcast in `examples/podcast.wav` to demonstrate the quality and format of the output. The models used are: gpt4o and Mini with tts-hs on Azure. You can listen to this example to get a sense of what Local-NotebookLM can produce before running it on your own PDFs.
