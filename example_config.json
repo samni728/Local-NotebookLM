@@ -29,7 +29,7 @@
     },
 
     "Step1": {
-        "system": "",
+        "system": null,
         "max_tokens": 1028,
         "temperature": 0.7,
         "chunk_size": 1000,
@@ -37,7 +37,7 @@
     },
 
     "Step2": {
-        "system": "",
+        "system": null,
         "max_tokens": 8126,
         "temperature": 1,
         "chunk_token_limit": 2000,
@@ -45,7 +45,7 @@
     },
 
     "Step3": {
-        "system": "",
+        "system": null,
         "max_tokens": 8126,
         "temperature": 1,
         "chunk_token_limit": 2000,

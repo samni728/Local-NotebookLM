@@ -45,6 +45,7 @@ def generate_transcript(
     style,
     format_type,
     preference_text,
+    system_prompt,
     max_tokens,
     temperature,
     chunk_token_limit,
@@ -111,8 +112,12 @@ def generate_transcript(
             
             return transcript
         else:
-            # Original behavior for texts that fit within token limits
-            system_prompt = map_step2_system_prompt(length=length, style=style, format_type=format_type, preference_text=preference_text)
+            if system_prompt == None:
+                # Original behavior for texts that fit within token limits
+                system_prompt = map_step2_system_prompt(length=length, style=style, format_type=format_type, preference_text=preference_text)
+            else:
+                system_prompt = system_prompt
+
             conversation = [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": input_text},
@@ -136,7 +141,8 @@ def step2(
     format_type: FormatType = "podcast",
     length: LengthType = "medium",
     style: StyleType = "normal",
-    preference_text: str = "nothing"
+    preference_text: str = "nothing",
+    system_prompt: str = None
 ) -> str:
     try:
         output_dir = Path(output_dir)
@@ -153,6 +159,7 @@ def step2(
             format_type=format_type,
             length=length,
             style=style,
+            system_prompt=system_prompt,
             preference_text=preference_text,
             max_tokens=config["Step2"]["max_tokens"],
             temperature=config["Step2"]["temperature"],

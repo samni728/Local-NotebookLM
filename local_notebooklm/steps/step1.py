@@ -106,6 +106,7 @@ def create_word_bounded_chunks(text: str, target_chunk_size: int) -> List[str]:
 def process_chunk(
         client,
         text_chunk,
+        system_prompt,
         chunk_num,
         model_name,
         max_tokens,
@@ -114,8 +115,13 @@ def process_chunk(
     ) -> str:
     try:
         wait_for_next_step()
+        if system_prompt == None:
+            system = step1_prompt.format(text_chunk=text_chunk, format_type=format_type)
+        else:
+            system = system_prompt
+            
         messages = [
-            {"role": "user", "content": step1_prompt.format(text_chunk=text_chunk, format_type=format_type)},
+            {"role": "user", "content": system},
         ]
         return generate_text(
             client=client,
@@ -133,7 +139,8 @@ def step1(
     client: Any = None,
     config: Optional[Dict[str, Any]] = None,
     output_dir: str = None,
-    format_type: FormatType = "podcast"
+    format_type: FormatType = "podcast",
+    system_prompt: str = None
 ) -> str:
     try:
         output_dir = Path(output_dir)
@@ -165,6 +172,7 @@ def step1(
                     text_chunk=chunk,
                     chunk_num=chunk_num,
                     format_type=format_type,
+                    system_prompt=system_prompt,
                     model_name=config["Small-Text-Model"]["model"],
                     max_tokens=config["Step1"]["max_tokens"],
                     temperature=config["Step1"]["temperature"]
