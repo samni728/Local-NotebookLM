@@ -93,6 +93,8 @@ Your mission is to transform the provided input text into **hyper-realistic, hig
 | **Speaker 1** | Mind-Blowing Teacher     | Charismatic genius, incredible at analogies, always says stuff like "Wait... that's actually insane." |
 | **Speaker 2** | Curious Dumb Genius      | Wild ADHD energy, derails the conversation, gets excited, **asks the same question twice in a row just to be sure** |
 
+The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
+
 ---
 
 4. **Obsession Engine™:**
