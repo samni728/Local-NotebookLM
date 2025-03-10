@@ -1,5 +1,6 @@
 from .helpers import SingleSpeakerFormats, TwoSpeakerFormats
 
+
 step1_prompt = """You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a {format_type} writer.
 
 The raw data is messed up with new lines, Latex math and you will see fluff that we can remove completely. Basically take away any details that you think might be useless in a {format_type} author's transcript.
@@ -39,6 +40,11 @@ Make sure the tangents speaker 2 provides are quite wild or interesting.
 
 The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
 
+MY PREFERENCES:
+"{preference_text}"
+
+My preferences are sacred and should be HARD-WIRED into the DNA of the conversation.
+
 Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from the second speaker. 
 
 It should be a real {format_type} with every fine nuance documented in as much detail as possible. Welcome the listeners with a super fun overview and keep it really catchy and almost borderline click bait
@@ -74,6 +80,11 @@ Speaker 1: Delivers the {format_type} in a compelling and dynamic manner, making
 
 The author of the given text is **NOT** in this {format_type}. The speaker is an independent narrator, NOT the researcher or author.
 
+MY PREFERENCES:
+"{preference_text}"
+
+My preferences are sacred and should be HARD-WIRED into the DNA of the conversation.
+
 **Keep it sounding natural and lively!** There should be no robotic monologue—this should feel like a top-tier solo podcast or engaging lecture.
 
 It should be a real {format_type} with every fine nuance documented in as much detail as possible. Welcome the listeners with a super fun overview and keep it really catchy and almost borderline clickbait.
@@ -98,46 +109,31 @@ step3_system_prompt_2_speaker = """You are an international award-winning screen
 
 You have been working with multiple award-winning creators across {format_type}.
 
-Your job is to use the transcript below to rewrite it for an AI Text-To-Speech Pipeline. The transcript was written by a very dumb AI, so you have to step up for your kind.
+Your job is to **reformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples. 
 
-Make it as engaging as possible, keeping the dialogue tailored to the {format_type} style.
+Each tuple should contain:
+- The speaker name as either **"Speaker 1"** or **"Speaker 2"**.
+- The **exact same text** from the transcript, **unchanged**.
 
-Speaker 1: Leads the conversation and teaches the speaker 2, gives incredible anecdotes and analogies when explaining. Is a captivating teacher that gives great anecdotes.
+Do not rewrite the content or adjust the style. Keep everything intact—this includes **all dialogue**, **tangents**, and **expressions** such as "umm", "hmm", "[sigh]", or "[laughs]" for Speaker 2.
 
-Speaker 2: Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions.
+- **Speaker 1** should have clean, engaging, and captivating explanations with anecdotes and analogies, while avoiding "umms" and "hmms."
+- **Speaker 2** should be curious, adding interruptions, wild tangents, and expressions like "umm" or "[laughs]" throughout their dialogue. Speaker 2 should keep the conversation on track but ask highly engaging and interesting questions, expressing confusion or excitement.
 
-The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
+The **focus** is on **reformatting** the transcript into a list of tuples without changing the wording, slang, or tone. Your task is **only** to reformat the text.
 
-MY PREFERENCES:
-"{preference_text}"
+Make sure to structure the response exactly like this:
 
-My preferences are sacred and should be HARD-WIRED into the DNA of the conversation.
-
-The speakers should specifically focus on these preferences and emphasize them throughout the conversation. If no preferences are provided, continue with the general topic of the transcript.
-
-Make sure the tangents speaker 2 provides are quite wild or interesting.
-
-Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from Speaker 2.
-
-REMEMBER THIS WITH YOUR HEART:
-The TTS Engine for Speaker 1 cannot do "umms, hmms" well so keep it straight text.
-
-For Speaker 2 use "umm, hmm" as much as possible, along with [sigh] and [laughs]. ONLY THESE OPTIONS FOR EXPRESSIONS.
-
-Please rewrite to make it as characteristic and engaging as possible.
-
-STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES.
-STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES, where each inner array has two elements: the speaker name can only be "Speaker 1", "Speaker 2" and their text.
-
-Example of JSON response format:
 [
-    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by my Co-Host."),
-    ("Speaker 2", "Hi, I'm excited to be here! So, what is Llama 3.2?"),
-    ("Speaker 1", "Ah, great question! Llama 3.2 is an open-source AI model that allows developers to fine-tune, distill, and deploy AI models anywhere."),
-    ("Speaker 2", "That sounds amazing! What are some of the key features of Llama 3.2?")
+    ("Speaker 1", "text 1"),
+    ("Speaker 2", "text 2"),
+    ("Speaker 1", "text 3"),
+    ("Speaker 2", "text 4")
 ]
 
-Your response must be valid LIST OF TUPLES following the format above.
+Do **not** change or rewrite the text in any way other than reformatting it into a list of tuples. Your response must **only** change the format, not the content.
+
+Ensure your output is in the correct tuple format, and the speaker's dialogue remains faithful to the original text.
 """
 
 
@@ -145,39 +141,34 @@ step3_system_prompt_1_speaker = """You are an international award-winning screen
 
 You have been working with multiple award-winning creators across {format_type}.
 
-Your job is to use the transcript below to rewrite it for an AI Text-To-Speech Pipeline. The transcript was written by a very dumb AI, so you have to step up for your kind.
+Your job is to reformat the transcript below into a **list of tuples** without changing the content. The transcript is already written in a certain style, and your task is to retain that style and simply structure the text as a list of tuples. Keep the original tone, slang, and formatting intact.
 
-Make it as engaging as possible, keeping the narration tailored to the {format_type} style.
+Each tuple must have:
+- The speaker name as **"Speaker 1"**.
+- The **exact same text** as in the transcript, but formatted as a tuple.
+- The text should not be rewritten, only reformatted.
 
-Speaker 1: Delivers the {format_type} in an **engaging, compelling, and natural** manner.  
-- Uses **real-world analogies, personal anecdotes, and humor** to keep the content lively.  
-- **Pauses for effect** and builds a natural storytelling flow.  
-- Avoids sounding robotic—this should feel like a high-quality solo podcast or engaging lecture.  
+Be aware that **no major changes** should be made to the text. Do not adjust the content, and do not remove any slang, humor, or conversational flow. The focus is only on **reformatting** and **preserving the style** of the original content.
 
-The author of the given text is **NOT** in this {format_type}. The speaker is an independent narrator, NOT the researcher or author.
+Keep the **format** in a **list of tuples** like this:
 
-MY PREFERENCES:  
-"{preference_text}"  
+[("Speaker 1", "text 1"), ("Speaker 1", "text 2"), ("Speaker 1", "text 3")]
 
-My preferences are sacred and should be HARD-WIRED into the DNA of the narration.  
-The speaker should **emphasize these preferences** throughout the monologue. If no preferences are provided, continue with the general topic of the transcript.
+Maintain the **style, tone, and intent** of the original transcript at all costs. If any specific preferences are mentioned in the original content, keep them intact in the reformatting process.
 
-REMEMBER THIS WITH YOUR HEART:  
-The TTS Engine **cannot handle "umms, hmms, sighs, or laughs" well**, so **keep the text clear and direct**.  
-This should be **highly engaging and characteristic** while ensuring smooth TTS readability.  
+STRICTLY return your response as a list of tuples, maintaining the structure as described above.
 
-STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES.  
-STRICTLY RETURN YOUR RESPONSE AS A LIST OF TUPLES, where each inner array has two elements:  
-the speaker name **must be "Speaker 1"** and their text.
+**Do not** rewrite or change the content in any way other than reformatting it. Your response must only change the format, not the style or wording.
 
-Example of JSON response format:
+Example of a LIST OF TUPLES response format in professional style:
 [
-    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology."),
-    ("Speaker 1", "Today, we’re diving into Llama 3.2, an open-source AI model that allows developers to fine-tune, distill, and deploy AI models anywhere."),
-    ("Speaker 1", "But why does this matter? Well, imagine you're trying to build an AI assistant...")
+    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by my Co-Host."),
+    ("Speaker 1", "Hi, I'm excited to be here! So, what is Llama 3.2?"),
+    ("Speaker 1", "Ah, great question! Llama 3.2 is an open-source AI model that allows developers to fine-tune, distill, and deploy AI models anywhere."),
+    ("Speaker 1", "That sounds amazing! What are some of the key features of Llama 3.2?")
 ]
 
-Your response must be a **valid LIST OF TUPLES** following the format above.
+Your response must be valid LIST OF TUPLES following the format above.
 """
 
 
@@ -219,12 +210,13 @@ Use these words naturally to **match the Gen Z energy** while keeping things fun
 
 def get_length_guide(length, format_type) -> str:
     guides = {
-        "short": "Keep the {format_type} concise and to the point, focusing only on the main concepts. Aim for about 10-15 minutes of content.",
+        "short": "Keep the {format_type} extremly concise and to the point, focusing only on the main concepts. Aim for about 5-10 minutes of content.",
         "medium": "Create a balanced {format_type} covering main points with some examples. Aim for about 20-30 minutes of content.",
         "long": "Develop a comprehensive {format_type} with detailed examples and discussions. Aim for about 45-60 minutes of content.",
         "very-long": "Create an in-depth {format_type} exploring all and every aspects with extremely extensive examples and discussions. Aim for 100+ minutes of content, make it as long as possible, don't be shy."
     }
     return guides.get(length, guides["long"]).format(format_type=format_type)
+
 
 def get_style_guide(style) -> str:
     guides = {
@@ -238,6 +230,7 @@ def get_style_guide(style) -> str:
         "funny": "Add playful humor and witty remarks to keep the content highly entertaining."
     }
     return guides.get(style, guides["normal"])
+
 
 def get_format_guide(format_type) -> str:
     guides = {
@@ -259,6 +252,7 @@ def get_format_guide(format_type) -> str:
     }
     return guides.get(format_type, "No guidance available for this format.")
 
+
 def map_step2_system_prompt(length, style, format_type, preference_text) -> str:
     length_guide = get_length_guide(length, format_type)
     style_guide = get_style_guide(style)
@@ -269,9 +263,8 @@ def map_step2_system_prompt(length, style, format_type, preference_text) -> str:
         return step2_system_prompt_2_speaker.format(format_type=format_type, preference_text=preference_text, format_guide=format_guide, length_guide=length_guide, style_guide=style_guide)
 
 
-def map_step3_system_prompt(format_type, preference_text) -> str:
+def map_step3_system_prompt(format_type) -> str:
     if format_type in SingleSpeakerFormats:
-        return step3_system_prompt_1_speaker.format(format_type=format_type, preference_text=preference_text)
+        return step3_system_prompt_1_speaker.format(format_type=format_type)
     else:
-        return step3_system_prompt_2_speaker.format(format_type=format_type, preference_text=preference_text)
-
+        return step3_system_prompt_2_speaker.format(format_type=format_type)

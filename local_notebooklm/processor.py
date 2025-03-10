@@ -101,7 +101,6 @@ def podcast_processor(
                 config=config,
                 input_file=transcript_file,
                 output_dir=str(output_dirs["step3"]),
-                preference_text=preference,
                 format_type=format_type
             )
         else:

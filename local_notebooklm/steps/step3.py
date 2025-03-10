@@ -34,12 +34,11 @@ def generate_rewritten_transcript(
     max_tokens,
     temperature,
     format_type,
-    preference_text
 ) -> str:
     try:
         wait_for_next_step()
         conversation = [
-            {"role": "system", "content": map_step3_system_prompt(format_type=format_type, preference_text=preference_text)},
+            {"role": "system", "content": map_step3_system_prompt(format_type=format_type)},
             {"role": "user", "content": input_text},
         ]
         return generate_text(
@@ -60,7 +59,6 @@ def generate_rewritten_transcript_with_overlap(
     max_tokens,
     temperature,
     format_type,
-    preference_text,
     chunk_size=8000,
     overlap_percent=20
 ) -> str:
@@ -100,7 +98,7 @@ def generate_rewritten_transcript_with_overlap(
                 context += "\n\nThis is the final part of the conversation. You may conclude naturally if appropriate."
             
             # Customize system prompt based on chunk position
-            chunk_system_prompt = map_step3_system_prompt(format_type=format_type, preference_text=preference_text)
+            chunk_system_prompt = map_step3_system_prompt(format_type=format_type)
             if not is_final_chunk:
                 chunk_system_prompt += "\n\nIMPORTANT: Since this is not the final part of the conversation, DO NOT include any goodbyes, conclusions, or wrap-ups. The conversation should continue naturally."
             
@@ -183,7 +181,6 @@ def step3(
     config: Optional[Dict[str, Any]] = None,
     input_file: str = None,
     output_dir: str = None,
-    preference_text: str = None,
     format_type: FormatType = "summary",
 ) -> str:
     try:
@@ -198,9 +195,6 @@ def step3(
         logger.info(f"Reading input file: {input_file}")
         input_text = read_pickle_file(input_file)
 
-        if not preference_text:
-            preference_text = ""
-
         logger.info(f"Optimizing transcript for TTS...")
 
         # Check if we need to generate in chunks with overlap
@@ -211,7 +205,6 @@ def step3(
                 model_name=config["Big-Text-Model"]["model"],
                 input_text=input_text,
                 format_type=format_type,
-                preference_text=preference_text,
                 max_tokens=config["Step3"]["max_tokens"],
                 temperature=config["Step1"]["temperature"],
                 chunk_size=config["Step3"].get("chunk_size", 8000),
@@ -225,7 +218,6 @@ def step3(
                 model_name=config["Big-Text-Model"]["model"],
                 input_text=input_text,
                 format_type=format_type,
-                preference_text=preference_text,
                 max_tokens=config["Step3"]["max_tokens"],
                 temperature=config["Step1"]["temperature"]
             )
