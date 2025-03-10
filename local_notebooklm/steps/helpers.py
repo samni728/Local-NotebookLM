@@ -1,6 +1,7 @@
 from typing import Dict, Any, List, Optional, Literal
 from elevenlabs.client import ElevenLabs
 from openai import OpenAI, AzureOpenAI
+from elevenlabs import save
 from google import genai
 import time
 
@@ -161,12 +162,22 @@ def generate_speech(
     response_format: str = "wav",
     output_path: str = "output.mp3"
 ):
-    with client.audio.speech.with_streaming_response.create(
-        model=model_name,
-        voice=voice,
-        input=text,
-        response_format=response_format
-    ) as response:
-        response.stream_to_file(str(output_path))
+    if isinstance(client, ElevenLabs):
+        client = ElevenLabs()
+        audio = client.text_to_speech.convert(
+            text=text,
+            voice_id=voice,
+            model_id=model_name,
+            output_format=response_format,
+        )
+        save(audio=audio, filename=str(output_path))
+    else:
+        with client.audio.speech.with_streaming_response.create(
+            model=model_name,
+            voice=voice,
+            input=text,
+            response_format=response_format
+        ) as response:
+            response.stream_to_file(str(output_path))
     
     return output_path

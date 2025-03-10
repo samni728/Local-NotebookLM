@@ -9,3 +9,6 @@ examples/test_output
 
 .test.text
 test.text
+
+.venv
+venv
