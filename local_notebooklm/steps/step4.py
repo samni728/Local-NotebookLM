@@ -69,7 +69,8 @@ def generate_speaker_audio(
 def step4(
     client: Any = None,
     config: Optional[Dict[str, Any]] = None,
-    dir: str = None
+    input_dir: str = None,
+    output_dir: str = None
 ) -> Path:
     model_name = config["Text-To-Speech-Model"]["model"]
     co_host = config["Co-Host-Speaker-Voice"]
@@ -78,14 +79,15 @@ def step4(
     
     try:
         # Convert output_dir to a Path object
-        output_dir = Path(dir)
+        input_dir = Path(input_dir)
+        output_dir = Path(output_dir)
         
         # Create output directories
         segments_dir = output_dir / "segments"
         segments_dir.mkdir(parents=True, exist_ok=True)
         
         # Load podcast data
-        podcast_data = load_podcast_data(output_dir / "podcast_ready_data.pkl")
+        podcast_data = load_podcast_data(input_dir / "podcast_ready_data.pkl")
         
         # Generate audio segments
         for i, (speaker, text) in enumerate(tqdm(podcast_data, desc="Generating podcast segments"), 1):

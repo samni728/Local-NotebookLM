@@ -30,7 +30,8 @@ def podcast_processor(
     output_dirs = {
         "step1": output_base / "step1",
         "step2": output_base / "step2",
-        "step3": output_base / "step3"
+        "step3": output_base / "step3",
+        "step4": output_base / "step4"
     }
     
     for dir_path in output_dirs.values():
@@ -113,7 +114,8 @@ def podcast_processor(
             final_audio_path = step4(
                 client=tts_client,
                 config=config,
-                dir=str(output_dirs["step3"])
+                input_dir=str(output_dirs["step3"]),
+                output_dir=str(output_dirs["step4"])
             )
             
             print(f"Podcast generation complete! Final audio file: {final_audio_path}")
