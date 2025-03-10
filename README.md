@@ -207,9 +207,9 @@ python -m local_notebooklm.start --pdf PATH_TO_PDF [options]
 |--------|-------------|---------|
 | `--pdf` | Path to the PDF file (required) | - |
 | `--config` | Path to custom config file | Uses base_config |
-| `--format` | Output format type (summary, podcast, article, interview) | podcast |
+| `--format` | Output format type (summary, podcast, article, interview, panel-discussion, debate, narration, storytelling, explainer, lecture, tutorial, q-and-a, news-report, executive-brief, meeting, analysis) | podcast |
 | `--length` | Content length (short, medium, long, very-long) | medium |
-| `--style` | Content style (normal, casual, formal, technical, academic) | normal |
+| `--style` | Content style (normal, casual, formal, technical, academic, friendly, gen-z, funny) | normal |
 | `--preference` | Additional focus preferences or instructions | None |
 | `--output-dir` | Directory to store output files | ./output |
 

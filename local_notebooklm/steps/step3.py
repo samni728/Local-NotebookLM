@@ -1,5 +1,5 @@
 from .helpers import generate, FormatType, wait_for_next_step
-from .prompts import step3_system_prompt
+from .prompts import map_step3_system_prompt
 from typing import Dict, Any, Optional
 from ast import literal_eval
 from pathlib import Path
@@ -39,7 +39,7 @@ def generate_rewritten_transcript(
     try:
         wait_for_next_step()
         conversation = [
-            {"role": "system", "content": step3_system_prompt.format(format_type=format_type, preference_text=preference_text)},
+            {"role": "system", "content": map_step3_system_prompt(format_type=format_type, preference_text=preference_text)},
             {"role": "user", "content": input_text},
         ]
         return generate(
