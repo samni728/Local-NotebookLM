@@ -106,7 +106,6 @@ def podcast_processor(
             )
         else:
             print("Skipping Step 3, assuming files exist in output directory...")
-            # No need to find files here as step4 will look for them directly
         
         # Step 4: Generate audio
         if not skip_to or skip_to <= 4:
