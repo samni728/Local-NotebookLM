@@ -116,8 +116,6 @@ def generate_rewritten_transcript_with_overlap(
                 max_tokens=max_tokens,
                 temperature=temperature,
             )
-
-            print(chunk_transcript)
             
             # Parse the chunk transcript
             try:
