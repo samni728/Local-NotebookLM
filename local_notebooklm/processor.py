@@ -49,7 +49,7 @@ def podcast_processor(
         
         # Extract system prompts for each step (with fallbacks to general system prompt)
         system_prompts = {}
-        for step_name in ["step1", "step2", "step3", "step4"]:
+        for step_name in ["step1", "step2", "step3"]:
             # Check if there's a specific system prompt for this step
             if step_name in config and "system" in config[step_name]:
                 system_prompts[step_name] = config[step_name]["system"]
@@ -128,8 +128,7 @@ def podcast_processor(
                 client=tts_client,
                 config=config,
                 input_dir=str(output_dirs["step3"]),
-                output_dir=str(output_dirs["step4"]),
-                system_prompt=system_prompts["step4"]
+                output_dir=str(output_dirs["step4"])
             )
             
             print(f"Podcast generation complete! Final audio file: {final_audio_path}")
