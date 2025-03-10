@@ -1,6 +1,7 @@
 from typing import Dict, Any, List, Optional, Literal
 from elevenlabs.client import ElevenLabs
 from openai import OpenAI, AzureOpenAI
+from google.genai import types
 from google import genai
 import time
 
@@ -91,9 +92,17 @@ def generate (
 ) -> str:
     if client == genai.Client():
         # Remap the messages into one prompt
+        system = messages # if exists, make
+        prompt = messages # Scrape prompt
+
         response = client.models.generate_content(
-            model=model, 
-            contents='Tell me a story in 300 words.'
+            model=model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                max_output_tokens=max_tokens,
+                temperature=temperature
+            ),
         )
         return response.text
     else:
