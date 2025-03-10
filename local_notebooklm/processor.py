@@ -47,6 +47,18 @@ def podcast_processor(
         cleaned_text_file = None
         transcript_file = None
         
+        # Extract system prompts for each step (with fallbacks to general system prompt)
+        system_prompts = {}
+        for step_name in ["step1", "step2", "step3", "step4"]:
+            # Check if there's a specific system prompt for this step
+            if step_name in config and "system" in config[step_name]:
+                system_prompts[step_name] = config[step_name]["system"]
+            # Fall back to general system prompt if available
+            elif "system" in config:
+                system_prompts[step_name] = config["system"]
+            else:
+                system_prompts[step_name] = None
+        
         # Step 1: Process PDF
         if not skip_to or skip_to <= 1:
             print("Step 1: Processing PDF...")
@@ -54,7 +66,8 @@ def podcast_processor(
                 client=small_text_client,
                 pdf_path=pdf_path,
                 config=config,
-                output_dir=str(output_dirs["step1"])
+                output_dir=str(output_dirs["step1"]),
+                system_prompt=system_prompts["step1"]
             )
         else:
             # If skipping, find the most recent output file from step1
@@ -79,7 +92,8 @@ def podcast_processor(
                 format_type=format_type,
                 length=length,
                 style=style,
-                preference_text=preference
+                preference_text=preference,
+                system_prompt=system_prompts["step2"]
             )
         else:
             # If skipping, find the most recent output file from step2
@@ -101,7 +115,8 @@ def podcast_processor(
                 config=config,
                 input_file=transcript_file,
                 output_dir=str(output_dirs["step3"]),
-                format_type=format_type
+                format_type=format_type,
+                system_prompt=system_prompts["step3"]
             )
         else:
             print("Skipping Step 3, assuming files exist in output directory...")
@@ -113,7 +128,8 @@ def podcast_processor(
                 client=tts_client,
                 config=config,
                 input_dir=str(output_dirs["step3"]),
-                output_dir=str(output_dirs["step4"])
+                output_dir=str(output_dirs["step4"]),
+                system_prompt=system_prompts["step4"]
             )
             
             print(f"Podcast generation complete! Final audio file: {final_audio_path}")
