@@ -162,6 +162,22 @@ The following provider options are supported:
   }
   ```
 
+- **Google generative AI**: Use OpenAI's API
+  ```json
+  "provider": {
+      "name": "google",
+      "key": "your-google-genai-api-key"
+  }
+  ```
+
+- **Elevenlabs**: Use OpenAI's API
+  ```json
+  "provider": {
+      "name": "elevenlabs",
+      "key": "your-elevenlabs-api-key"
+  }
+  ```
+
 - **Custom**: Use any OpenAI-compatible API
   ```json
   "provider": {
@@ -278,6 +294,110 @@ By default, the server runs on http://localhost:8000. You can access the API doc
 - Generates individual audio segments for each dialogue part
 - Concatenates segments into a final audio file
 - Maintains consistent audio quality and sample rate
+
+### Here is a detaled diagram to visualize the architecture of my project.
+
+```mermaid
+flowchart TD
+    subgraph "Main Controller"
+        processor["podcast_processor()"]
+    end
+
+    subgraph "AI Services"
+        smallAI["Small Text Model Client"]
+        bigAI["Big Text Model Client"]
+        ttsAI["Text-to-Speech Model Client"]
+    end
+    
+    subgraph "Step 1: PDF Processing"
+        s1["step1()"]
+        validate["validate_pdf()"]
+        extract["extract_text_from_pdf()"]
+        chunk1["create_word_bounded_chunks()"]
+        process["process_chunk()"]
+    end
+    
+    subgraph "Step 2: Transcript Generation"
+        s2["step2()"]
+        read2["read_input_file()"]
+        gen2["generate_transcript()"]
+        chunk2["Chunking with Overlap"]
+    end
+    
+    subgraph "Step 3: TTS Optimization"
+        s3["step3()"]
+        read3["read_pickle_file()"]
+        gen3["generate_rewritten_transcript()"]
+        genOverlap["generate_rewritten_transcript_with_overlap()"]
+        validate3["validate_transcript_format()"]
+    end
+    
+    subgraph "Step 4: Audio Generation"
+        s4["step4()"]
+        load4["load_podcast_data()"]
+        genAudio["generate_speaker_audio()"]
+        concat["concatenate_audio_files()"]
+    end
+
+    %% Flow connections
+    processor --> s1
+    processor --> s2
+    processor --> s3
+    processor --> s4
+    
+    processor -.-> smallAI
+    processor -.-> bigAI
+    processor -.-> ttsAI
+    
+    %% Step 1 flow
+    s1 --> validate
+    validate --> extract
+    extract --> chunk1
+    chunk1 --> process
+    process -.-> smallAI
+    
+    %% Step 2 flow
+    s2 --> read2
+    read2 --> gen2
+    gen2 --> chunk2
+    gen2 -.-> bigAI
+    
+    %% Step 3 flow
+    s3 --> read3
+    read3 --> gen3
+    read3 --> genOverlap
+    gen3 --> validate3
+    genOverlap --> validate3
+    gen3 -.-> bigAI
+    genOverlap -.-> bigAI
+    
+    %% Step 4 flow
+    s4 --> load4
+    load4 --> genAudio
+    genAudio --> concat
+    genAudio -.-> ttsAI
+    
+    %% Data flow
+    pdf[("PDF File")] --> s1
+    s1 --> |"cleaned_text.txt"| file1[("Cleaned Text")]
+    file1 --> s2
+    s2 --> |"data.pkl"| file2[("Transcript")]
+    file2 --> s3
+    s3 --> |"podcast_ready_data.pkl"| file3[("Optimized Transcript")]
+    file3 --> s4
+    s4 --> |"podcast.wav"| fileAudio[("Final Audio")]
+
+    %% Styling
+    classDef controller fill:#f9d5e5,stroke:#333,stroke-width:2px
+    classDef ai fill:#eeeeee,stroke:#333,stroke-width:1px
+    classDef step fill:#d0e8f2,stroke:#333,stroke-width:1px
+    classDef data fill:#fcf6bd,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
+    
+    class processor controller
+    class smallAI,bigAI,ttsAI ai
+    class s1,s2,s3,s4,validate,extract,chunk1,process,read2,gen2,chunk2,read3,gen3,genOverlap,validate3,load4,genAudio,concat step
+    class pdf,file1,file2,file3,fileAudio data
+```
 
 ## Output Files
 
