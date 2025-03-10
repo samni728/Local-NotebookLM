@@ -1,4 +1,4 @@
-from .helpers import generate, wait_for_next_step, FormatType, LengthType, StyleType
+from .helpers import generate_text, wait_for_next_step, FormatType, LengthType, StyleType
 from .prompts import map_step2_system_prompt
 from typing import Any, Dict, Optional
 import logging, pickle, time
@@ -80,7 +80,7 @@ def generate_transcript(
                 {"role": "user", "content": f"Create the beginning of a {format_type} transcript based on this content (part 1/{len(chunks)}): {chunks[0]}"},
             ]
             
-            transcript = generate(
+            transcript = generate_text(
                 client=client,
                 model=model_name,
                 messages=conversation,
@@ -99,7 +99,7 @@ def generate_transcript(
                     {"role": "user", "content": f"Continue the transcript with part {i}/{len(chunks)}: {chunk}"}
                 ]
                 
-                next_part = generate(
+                next_part = generate_text(
                     client=client,
                     model=model_name,
                     messages=conversation,
@@ -117,7 +117,7 @@ def generate_transcript(
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": input_text},
             ]
-            return generate(
+            return generate_text(
                 client=client,
                 model=model_name,
                 messages=conversation,

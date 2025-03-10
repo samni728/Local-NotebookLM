@@ -1,4 +1,4 @@
-from .helpers import generate, FormatType, wait_for_next_step
+from .helpers import generate_text, FormatType, wait_for_next_step
 from .prompts import map_step3_system_prompt
 from typing import Dict, Any, Optional
 from ast import literal_eval
@@ -42,7 +42,7 @@ def generate_rewritten_transcript(
             {"role": "system", "content": map_step3_system_prompt(format_type=format_type, preference_text=preference_text)},
             {"role": "user", "content": input_text},
         ]
-        return generate(
+        return generate_text(
             client=client,
             model=model_name,
             messages=conversation,
@@ -100,16 +100,16 @@ def generate_rewritten_transcript_with_overlap(
                 context += "\n\nThis is the final part of the conversation. You may conclude naturally if appropriate."
             
             # Customize system prompt based on chunk position
-            chunk_system_prompt = step3_system_prompt
+            chunk_system_prompt = map_step3_system_prompt(format_type=format_type, preference_text=preference_text)
             if not is_final_chunk:
                 chunk_system_prompt += "\n\nIMPORTANT: Since this is not the final part of the conversation, DO NOT include any goodbyes, conclusions, or wrap-ups. The conversation should continue naturally."
             
             conversation = [
-                {"role": "system", "content": chunk_system_prompt.format(format_type=format_type, preference_text=preference_text)},
+                {"role": "system", "content": chunk_system_prompt},
                 {"role": "user", "content": f"{chunk}\n\n{context}"},
             ]
             
-            chunk_transcript = generate(
+            chunk_transcript = generate_text(
                 client=client,
                 model=model_name,
                 messages=conversation,

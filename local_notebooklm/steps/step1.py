@@ -1,4 +1,4 @@
-from .helpers import generate, FormatType, wait_for_next_step
+from .helpers import generate_text, FormatType, wait_for_next_step
 from typing import Optional, List, Dict, Any
 from .prompts import step1_prompt
 import logging, PyPDF2, os, time
@@ -117,7 +117,7 @@ def process_chunk(
         messages = [
             {"role": "user", "content": step1_prompt.format(text_chunk=text_chunk, format_type=format_type)},
         ]
-        return generate(
+        return generate_text(
             client=client,
             model=model_name,
             messages=messages,
