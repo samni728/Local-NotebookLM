@@ -1,6 +1,7 @@
 from typing import Dict, Any, List, Optional, Literal
+from elevenlabs.client import ElevenLabs
 from openai import OpenAI, AzureOpenAI
-import google.generativeai as genai
+from google import genai
 import time
 
 FormatType = Literal[
@@ -16,7 +17,7 @@ def wait_for_next_step(seconds: float = 2):
     time.sleep(seconds)
 
 def set_provider(
-        provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'google', 'custom']] = None,
+        provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'google', 'elevenlabs', 'custom']] = None,
         config: Optional[Dict[str, Any]] = None
     ):
     if provider_name == None:
@@ -67,6 +68,9 @@ def set_provider(
     elif provider_name == "google":
         client = genai.Client(api_key=api_key)
         return client
+    elif provider_name == "elevenlabs":
+        client = ElevenLabs(api_key=api_key)
+        return client
     elif provider_name == "custom":
         base_url = config["endpoint"]
         if base_url is None:
@@ -83,17 +87,15 @@ def generate (
     messages: Optional[List[Dict]] = None,
     model: str = "gpt-4o-mini",
     max_tokens: int = 512,
-    temperature: float = 0.7,
-    format: bool = False
+    temperature: float = 0.7
 ) -> str:
-    if format:
-        response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        max_tokens=max_tokens,
-        temperature=temperature,
-        response_format={"type": "json_object"}
-    )
+    if client == genai.Client():
+        # Remap the messages into one prompt
+        response = client.models.generate_content(
+            model=model, 
+            contents='Tell me a story in 300 words.'
+        )
+        return response.text
     else:
         response = client.chat.completions.create(
             model=model,
@@ -101,4 +103,4 @@ def generate (
             max_tokens=max_tokens,
             temperature=temperature,
         )
-    return response.choices[0].message.content
+        return response.choices[0].message.content
