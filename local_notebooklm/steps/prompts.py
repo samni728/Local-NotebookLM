@@ -181,6 +181,42 @@ Your response must be a **valid LIST OF TUPLES** following the format above.
 """
 
 
+gen_z_mapping_prompt = """Infuse humor, pop culture references, and a very laid-back conversational tone. Keep it **engaging, slightly chaotic, and fun, but still clear and informative.** Use modern wording naturally, like:  
+- **Bet** – Agreement or confirmation (e.g., 'You down?' – 'Bet.')
+- **Rizz** – Charisma or flirting skills (e.g., 'Dude got W rizz.')
+- **Cap / No Cap** – Lie / Not a lie (e.g., 'That’s cap.' / 'No cap, I was there.')
+- **Slaps** – Something really good (e.g., 'This song slaps.')
+- **Mid** – Mediocre, average, or overhyped (e.g., 'That movie was mid.')
+- **Fire** – Extremely good or cool (e.g., 'That fit is fire.')
+- **Based** – Unapologetically yourself / a strong opinion (e.g., 'That take was so based.')
+- **Lowkey / Highkey** – Lowkey = kinda / Highkey = really (e.g., 'I lowkey love it.' / 'I’m highkey tired.')
+- **Vibe Check** – Assessing the mood or situation (e.g., 'This party failed the vibe check.')
+- **GOAT** – Greatest of all time (e.g., 'Messi is the GOAT.')
+- **L / W** – Loss or Win (e.g., 'That’s an L for you.' / 'W move.')
+- **Ratio** – When a reply gets more engagement than the original post (e.g., 'L + ratio.')
+- **Stan** – Hardcore fan of something (e.g., 'I stan Berserk.')
+- **No thoughts, head empty** – Joking way to say you’re spacing out  
+- **On God** – Emphasizing the truth (e.g., 'That movie was trash, on God.')
+- **Drip** – Good outfit or style (e.g., 'That jacket got drip.')
+- **Sending me** – When something is hilarious (e.g., 'That meme is sending me.')
+- **Big Yikes** – Extreme cringe (e.g., 'Bro wore socks with sandals… big yikes.')
+- **Hits Different** – Something feels unique or extra special (e.g., 'This song at night hits different.')
+- **Ate (and left no crumbs)** – When someone does something flawlessly (e.g., 'She ate that performance.')
+- **Pressed** – Mad or upset (e.g., 'Why you so pressed?')
+- **Sus** – Suspicious or sketchy (e.g., 'That dude acting sus.')
+- **Smol** – Cute and tiny (e.g., 'Look at that smol cat!')
+- **Delulu** – Delusional (e.g., 'She thinks she can date him? So delulu.')
+- **Main Character Energy** – When someone acts like they’re the star of a movie (e.g., 'Walking through the city with my music on, main character energy.')
+- **Side Questing** – Doing random, unnecessary things instead of real goals (e.g., 'I should be studying, but I’m side questing at Target.')
+- **It’s Giving** – When something has a certain vibe (e.g., 'That outfit? It’s giving rich auntie.')
+- **No Diddy** – Absolutely not, no chance (e.g., 'You think I’m paying for your food? No diddy.')
+- **Zesty** – Someone acting extra flamboyant or over-the-top (e.g., 'Bro was moving kinda zesty.')
+- **Looking Ahh** – Used to roast someone’s appearance, usually exaggerating (e.g., 'Boy, you got that school lunch tray-looking ahh haircut.')
+
+Always start responses with 'Eyo what's up gang,' 'Ayo,' 'Hold up fam,' or 'Lemme put you on'—never use formal intros like 'Alright folks' or 'Welcome everyone
+Use these words naturally to **match the Gen Z energy** while keeping things fun, relatable, and effortlessly cool."""
+
+
 def get_length_guide(length, format_type) -> str:
     guides = {
         "short": "Keep the {format_type} concise and to the point, focusing only on the main concepts. Aim for about 10-15 minutes of content.",
@@ -198,7 +234,7 @@ def get_style_guide(style) -> str:
         "academic": "Use precise terminology and structured explanations, suitable for an academic audience.",
         "casual": "Be very conversational and informal, including jokes and casual banter.",
         "technical": "Focus on technical accuracy and detailed explanations of concepts.",
-        "gen-z": "Infuse humor, pop culture references, and a very laid-back conversational tone.",
+        "gen-z": gen_z_mapping_prompt,
         "funny": "Add playful humor and witty remarks to keep the content highly entertaining."
     }
     return guides.get(style, guides["normal"])
