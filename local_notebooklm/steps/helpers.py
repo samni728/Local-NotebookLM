@@ -1,5 +1,6 @@
 from typing import Dict, Any, List, Optional, Literal
 from openai import OpenAI, AzureOpenAI
+import google.generativeai as genai
 import time
 
 FormatType = Literal[
@@ -15,7 +16,7 @@ def wait_for_next_step(seconds: float = 2):
     time.sleep(seconds)
 
 def set_provider(
-        provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'custom']] = None,
+        provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'google', 'custom']] = None,
         config: Optional[Dict[str, Any]] = None
     ):
     if provider_name == None:
@@ -62,6 +63,9 @@ def set_provider(
             api_version=version,
             api_key=api_key
         )
+        return client
+    elif provider_name == "google":
+        client = genai.Client(api_key=api_key)
         return client
     elif provider_name == "custom":
         base_url = config["endpoint"]
