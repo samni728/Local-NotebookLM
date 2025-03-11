@@ -1,6 +1,7 @@
 from typing import Dict, Any, List, Optional, Literal
 from elevenlabs.client import ElevenLabs
 from openai import OpenAI, AzureOpenAI
+from anthropic import Anthropic
 from elevenlabs import save
 from google import genai
 import time
@@ -29,7 +30,7 @@ def wait_for_next_step(seconds: float = 2):
 
 
 def set_provider(
-    provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'google', 'elevenlabs', 'custom']] = None,
+    provider_name: Optional[Literal['openai', 'lmstudio', 'ollama', 'groq', 'azure', 'google', 'anthropic', 'elevenlabs', 'custom']] = None,
     config: Optional[Dict[str, Any]] = None
 ):
     if provider_name is None:
@@ -86,6 +87,9 @@ def set_provider(
         if api_key is None:
             raise ValueError("API key is required for Google provider.")
         client = genai.Client(api_key=api_key)
+        return client
+    elif provider_name == "anthropic":
+        client = Anthropic(api_key=api_key)
         return client
     elif provider_name == "elevenlabs":
         if api_key is None:
@@ -144,6 +148,28 @@ def generate_text(
             ),
         )
         return response.text
+    elif isinstance(client, Anthropic):
+        # Extract system message and prepare messages for Anthropic format
+        system_message = ""
+        anthropic_messages = []
+        
+        for message in messages:
+            if message.get("role") == "system":
+                system_message = message.get("content", "")
+            elif message.get("role") in ["user", "assistant"]:
+                anthropic_messages.append({
+                    "role": message.get("role"),
+                    "content": message.get("content", "")
+                })
+        
+        response = client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            system=system_message,
+            messages=anthropic_messages
+        )
+        return response.content[0].text
     else:
         response = client.chat.completions.create(
             model=model,
