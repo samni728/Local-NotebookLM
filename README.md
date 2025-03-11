@@ -171,7 +171,7 @@ The following provider options are supported:
   }
   ```
 
-- **Google generative AI**: Use OpenAI's API
+- **Google generative AI**: Use Google's API
   ```json
   "provider": {
       "name": "google",
@@ -179,7 +179,15 @@ The following provider options are supported:
   }
   ```
 
-- **Elevenlabs**: Use OpenAI's API
+- **Anthropic**: Use Anthropic's API
+  ```json
+  "provider": {
+      "name": "anthropic",
+      "key": "your-anthropic-api-key"
+  }
+  ```
+
+- **Elevenlabs**: Use Elevenlabs's API
   ```json
   "provider": {
       "name": "elevenlabs",

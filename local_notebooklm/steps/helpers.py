@@ -125,7 +125,6 @@ def generate_text(
         raise ValueError("Messages are required")
     
     if isinstance(client, genai.Client):
-        # Extract system message if it exists
         system_message = None
         user_content = []
         
@@ -149,7 +148,6 @@ def generate_text(
         )
         return response.text
     elif isinstance(client, Anthropic):
-        # Extract system message and prepare messages for Anthropic format
         system_message = ""
         anthropic_messages = []
         
