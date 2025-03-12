@@ -171,7 +171,7 @@ def step2(
         with open(f"{output_file}.pkl", 'wb') as file:
             pickle.dump(transcript, file)
         with open(f"{output_file}.txt", 'w') as file:
-            file(transcript)
+            file.write(transcript)
 
         logger.info(f"Transcript saved to: {output_file}")
         return str(input_file), str(output_file)
