@@ -174,7 +174,7 @@ def step2(
             file.write(transcript)
 
         logger.info(f"Transcript saved to: {output_file}")
-        return str(input_file), str(output_file)
+        return str(input_file), str(f"{output_file}.pkl")
 
     except (FileReadError, TranscriptGenerationError, InvalidParameterError) as e:
         logger.error(f"Transcript generation failed: {str(e)}")
