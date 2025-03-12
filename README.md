@@ -29,7 +29,7 @@ A local AI-powered tool that converts PDF documents into engaging podcasts, usin
 ### From PyPI
 
 ```bash
-pip install Local-NotebookLM
+pip install local-notebooklm
 ```
 
 ### From source
