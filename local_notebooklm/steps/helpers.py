@@ -21,6 +21,15 @@ TwoSpeakerFormats = Literal[
     "podcast", "interview", "panel-discussion",
     "debate", "q-and-a", "meeting"
 ]
+SINGLE_SPEAKER_FORMATS = {
+    "summary", "narration", "storytelling", "explainer",
+    "lecture", "tutorial", "news-report", "executive-brief", "analysis"
+}
+
+TWO_SPEAKER_FORMATS = {
+    "podcast", "interview", "panel-discussion",
+    "debate", "q-and-a", "meeting"
+}
 LengthType = Literal["short", "medium", "long", "very-long"]
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
 

@@ -1,4 +1,4 @@
-from .helpers import SingleSpeakerFormats, TwoSpeakerFormats
+from .helpers import SINGLE_SPEAKER_FORMATS
 
 
 step1_prompt = """You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a {format_type} writer.
@@ -257,14 +257,14 @@ def map_step2_system_prompt(length, style, format_type, preference_text) -> str:
     length_guide = get_length_guide(length, format_type)
     style_guide = get_style_guide(style)
     format_guide = get_format_guide(format_type)
-    if format_type in SingleSpeakerFormats:
+    if format_type in SINGLE_SPEAKER_FORMATS:
         return step2_system_prompt_1_speaker.format(format_type=format_type, preference_text=preference_text, format_guide=format_guide, length_guide=length_guide, style_guide=style_guide)
     else:
         return step2_system_prompt_2_speaker.format(format_type=format_type, preference_text=preference_text, format_guide=format_guide, length_guide=length_guide, style_guide=style_guide)
 
 
 def map_step3_system_prompt(format_type) -> str:
-    if format_type in SingleSpeakerFormats:
+    if format_type in SINGLE_SPEAKER_FORMATS:
         return step3_system_prompt_1_speaker.format(format_type=format_type)
     else:
         return step3_system_prompt_2_speaker.format(format_type=format_type)
