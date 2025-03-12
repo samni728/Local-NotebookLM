@@ -167,9 +167,11 @@ def step2(
             overlap_percent=config["Step2"].get("overlap_percent", 10)
         )
 
-        output_file = output_dir / 'data.pkl'
-        with open(output_file, 'wb') as file:
+        output_file = output_dir / 'data'
+        with open(f"{output_file}.pkl", 'wb') as file:
             pickle.dump(transcript, file)
+        with open(f"{output_file}.txt", 'w') as file:
+            file(transcript)
 
         logger.info(f"Transcript saved to: {output_file}")
         return str(input_file), str(output_file)

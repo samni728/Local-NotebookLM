@@ -190,9 +190,11 @@ def step3(
     config: Optional[Dict[str, Any]] = None,
     input_file: str = None,
     output_dir: str = None,
-    format_type: FormatType = "summary",
+    format_type: FormatType = "podcast",
     system_prompt: str = None
 ) -> str:
+    
+    print(format_type)
     try:
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)

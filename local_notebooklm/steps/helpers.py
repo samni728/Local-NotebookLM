@@ -187,7 +187,6 @@ def generate_speech(
     output_path: str = "output"
 ):
     if isinstance(client, ElevenLabs):
-        print(client)
         audio = client.text_to_speech.convert(
             text=text,
             voice_id=voice,
