@@ -184,17 +184,17 @@ def generate_speech(
     voice: str = "alloy",
     model_name: str = "tts-1",
     response_format: str = "wav",
-    output_path: str = "output.mp3"
+    output_path: str = "output"
 ):
     if isinstance(client, ElevenLabs):
-        client = ElevenLabs()
+        print(client)
         audio = client.text_to_speech.convert(
             text=text,
             voice_id=voice,
             model_id=model_name,
             output_format=response_format,
         )
-        save(audio=audio, filename=str(output_path))
+        save(audio=audio, filename=str(f"{output_path}.{response_format}"))
     else:
         with client.audio.speech.with_streaming_response.create(
             model=model_name,
@@ -202,6 +202,6 @@ def generate_speech(
             input=text,
             response_format=response_format
         ) as response:
-            response.stream_to_file(str(output_path))
+            response.stream_to_file(str(f"{output_path}.{response_format}"))
     
-    return output_path
+    return f"{output_path}.{response_format}"

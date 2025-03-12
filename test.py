@@ -5,8 +5,8 @@ success, result = podcast_processor(
     config_path="config.json",
     format_type="summary",
     length="short",
-    style="academic",
-    preference="Focus on the key technical aspects, this podcast shoudl only be for Machine Learning researchers and engineers.",
+    style="normal",
+    # preference="Focus on the key technical aspects, this podcast shoudl only be for Machine Learning researchers and engineers.",
     output_dir="./examples/test_output",
     skip_to=4
 )
