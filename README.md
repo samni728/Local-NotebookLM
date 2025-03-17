@@ -226,7 +226,7 @@ python -m local_notebooklm.start --pdf PATH_TO_PDF [options]
 | `--preference` | Additional focus preferences or instructions | None |
 | `--output-dir` | Directory to store output files | ./output |
 
-It currently does NOT support multible languages other then english, you can try it working around it by adding a text in the preferences saying what language the audio should be, also be sure the TTS model supports your desired language.
+Local-NotebookLM currently does NOT support multible languages other then english, you can try working around it by adding a text in the preferences saying what language the audio should be, also be sure the TTS model supports your desired language.
 
 #### Format Types
 
