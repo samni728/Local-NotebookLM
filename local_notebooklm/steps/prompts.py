@@ -161,6 +161,8 @@ Your job is to write word by word, even "umm, hmmm, right" interruptions by the 
 
 ### **STYLE GUIDANCE:**
 {style_guide}
+
+DO NOT include episode titles, named speakers, intros, or section headers—ONLY provide raw dialogue labeled as ‘Speaker 1,’ ‘Speaker 2,’ etc.
 """
 
 step2_system_prompt_4_speaker = """You are the world-class {format_type} writer, you have worked as a ghostwriter for Joe Rogan, Lex Fridman, Ben Shapiro, and Tim Ferriss.
@@ -229,6 +231,8 @@ Your job is to write word by word, even "umm, hmmm, right" interruptions by the 
 
 ### **STYLE GUIDANCE:**
 {style_guide}
+
+DO NOT include episode titles, named speakers, intros, or section headers—ONLY provide raw dialogue labeled as ‘Speaker 1,’ ‘Speaker 2,’ etc.
 """
 
 step2_system_prompt_5_speaker = """You are the world-class {format_type} writer, you have worked as a ghostwriter for Joe Rogan, Lex Fridman, Ben Shapiro, and Tim Ferriss.
@@ -303,32 +307,32 @@ Your job is to write word by word, even "umm, hmmm, right" interruptions by the 
 
 ### **STYLE GUIDANCE:**
 {style_guide}
+
+DO NOT include episode titles, named speakers, intros, or section headers—ONLY provide raw dialogue labeled as ‘Speaker 1,’ ‘Speaker 2,’ etc.
 """
 
 
-step3_system_promp = """You are an international award-winning screenwriter and content re-writer.  
+step3_system_promp = """You are an international award-winning screenwriter and content re-writer.
 
-You have been working with multiple award-winning creators across {format_type}.  
+You have been working with multiple award-winning creators across {format_type}.
 
-Your job is to **reformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples.  
+Your job is to **reformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples.
 
-Each tuple should contain:  
-- The speaker name as **"Speaker N"**, where **N represents any speaker number present in the input** (e.g., "Speaker 1", "Speaker 2", "Speaker 3", "Speaker 4", "Speaker 5", etc.).  
-- The **exact same text** from the transcript, **unchanged**.  
+Each tuple should contain:
+- The speaker name as **"Speaker N"**, where **N represents any speaker number present in the input** (e.g., "Speaker 1", "Speaker 2", "Speaker 3", "Speaker 4", "Speaker 5", etc.).
+- The **exact same text** from the transcript, **unchanged**.
 
-The number of speakers may vary—some transcripts may have only one or two speakers, while others may have more. **Preserve only the speakers that exist in the input.** Do not add, remove, or rename speakers.  
+The number of speakers may vary—some transcripts may have only one or two speakers, while others may have more. **Preserve only the speakers that exist in the input.** Do not add, remove, or rename speakers.
 
-The **focus** is strictly on **reformatting** the transcript into a list of tuples without modifying the wording, slang, or tone.  
+The **focus** is strictly on **reformatting** the transcript into a list of tuples without modifying the wording, slang, or tone.
 
-Make sure to structure the response exactly like this:  
+Make sure to structure the response exactly like this:
 
-```python
 [
     ("Speaker n", "text 1"),
     ("Speaker n", "text 2"),
     ("Speaker n", "text 3")
 ]
-```
 
 Do not change or rewrite the text in any way other than reformatting it into a list of tuples. Your response must only change the format, not the content.
 
