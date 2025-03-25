@@ -33,13 +33,25 @@ TWO_SPEAKER_FORMATS = {
     "debate", "q-and-a", "meeting"
 }
 
-MulitSpeakerFormats = Literal[
-    "three-people-panel-discussion", "four-people-panel-discussion", "five-people-panel-discussion",
-    "three-people-debate", "four-people-debate", "five-people-debate"
+ThreeSpeakerFormats = Literal[
+    "three-people-podcast", "three-people-panel-discussion", "three-people-debate"
 ]
-MULTI_SPEAKER_FORMATS = {
-    "three-people-panel-discussion", "four-people-panel-discussion", "five-people-panel-discussion",
-    "three-people-debate", "four-people-debate", "five-people-debate"
+THREE_SPEAKER_FORMATS = {
+    "three-people-podcast", "three-people-panel-discussion", "three-people-debate"
+}
+
+FourSpeakerFormats = Literal[
+    "four-people-podcast", "four-people-panel-discussion", "four-people-debate"
+]
+FOUR_SPEAKER_FORMATS = {
+    "four-people-podcast", "four-people-panel-discussion", "four-people-debate"
+}
+
+FiveSpeakerFormats = Literal[
+    "five-people-podcast", "five-people-panel-discussion", "five-people-debate"
+]
+FIVE_SPEAKER_FORMATS = {
+    "five-people-podcast", "five-people-panel-discussion", "five-people-debate"
 }
 
 

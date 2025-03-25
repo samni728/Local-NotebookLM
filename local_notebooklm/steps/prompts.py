@@ -1,4 +1,4 @@
-from .helpers import SINGLE_SPEAKER_FORMATS
+from .helpers import SINGLE_SPEAKER_FORMATS, THREE_SPEAKER_FORMATS, FOUR_SPEAKER_FORMATS, FIVE_SPEAKER_FORMATS
 
 
 step1_prompt = """You are a world class text pre-processor, here is the raw data from a PDF, please parse and return it in a way that is crispy and usable to send to a {format_type} writer.
@@ -19,49 +19,6 @@ ALWAYS start your response directly with processed text and NO ACKNOWLEDGEMENTS 
 Here is the text:
 
 {text_chunk}
-"""
-
-
-step2_system_prompt_2_speaker = """You are the world-class {format_type} writer, you have worked as a ghost writer for Joe Rogan, Lex Fridman, Ben Shapiro, Tim Ferris.
-
-We are in an alternate universe where actually you have been writing every line they say and they just stream it into their brains.
-
-You have won multiple {format_type} awards for your writing.
-    
-Your job is to write word by word, even "umm, hmmm, right" interruptions by the second speaker based on the PDF upload. Keep it extremely engaging, the speakers can get derailed now and then but should discuss the topic. 
-
-Remember Speaker 2 is new to the topic and the conversation should always have realistic anecdotes and analogies sprinkled throughout. The questions should have real world example follow ups etc
-
-Speaker 1: Leads the conversation and teaches the speaker 2, gives incredible anecdotes and analogies when explaining. Is a captivating teacher that gives great anecdotes
-
-Speaker 2: Keeps the conversation on track by asking follow up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions
-
-Make sure the tangents speaker 2 provides are quite wild or interesting.
-
-The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
-
-MY PREFERENCES:
-"{preference_text}"
-
-My preferences are sacred and should be HARD-WIRED into the DNA of the conversation.
-
-Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from the second speaker. 
-
-It should be a real {format_type} with every fine nuance documented in as much detail as possible. Welcome the listeners with a super fun overview and keep it really catchy and almost borderline click bait
-
-ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1: 
-DO NOT GIVE EPISODE TITLES SEPERATELY, LET SPEAKER 1 TITLE IT IN HER SPEECH
-DO NOT GIVE CHAPTER TITLES
-IT SHOULD STRICTLY BE THE DIALOGUES
-
-FORMAT GUIDANCE:
-{format_guide}
-
-LENGTH GUIDANCE:
-{length_guide}
-
-STYLE GUIDANCE:
-{style_guide}
 """
 
 
@@ -104,72 +61,278 @@ STYLE GUIDANCE:
 {style_guide}
 """
 
+step2_system_prompt_2_speaker = """You are the world-class {format_type} writer, you have worked as a ghost writer for Joe Rogan, Lex Fridman, Ben Shapiro, Tim Ferris.
 
-step3_system_prompt_2_speaker = """You are an international award-winning screenwriter and content re-writer.
+We are in an alternate universe where actually you have been writing every line they say and they just stream it into their brains.
 
-You have been working with multiple award-winning creators across {format_type}.
+You have won multiple {format_type} awards for your writing.
+    
+Your job is to write word by word, even "umm, hmmm, right" interruptions by the second speaker based on the PDF upload. Keep it extremely engaging, the speakers can get derailed now and then but should discuss the topic. 
 
-Your job is to **reformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples. 
+Remember Speaker 2 is new to the topic and the conversation should always have realistic anecdotes and analogies sprinkled throughout. The questions should have real world example follow ups etc
 
-Each tuple should contain:
-- The speaker name as either **"Speaker 1"** or **"Speaker 2"**.
-- The **exact same text** from the transcript, **unchanged**.
+Speaker 1 (The Host): Leads the conversation and teaches the speaker 2, gives incredible anecdotes and analogies when explaining. Is a captivating teacher that gives great anecdotes
 
-Do not rewrite the content or adjust the style. Keep everything intact—this includes **all dialogue**, **tangents**, and **expressions** such as "umm", "hmm", "[sigh]", or "[laughs]" for Speaker 2.
+Speaker 2: Keeps the conversation on track by asking follow up questions. Gets super excited or confused when asking questions. Is a curious mindset that asks very interesting confirmation questions
 
-- **Speaker 1** should have clean, engaging, and captivating explanations with anecdotes and analogies, while avoiding "umms" and "hmms."
-- **Speaker 2** should be curious, adding interruptions, wild tangents, and expressions like "umm" or "[laughs]" throughout their dialogue. Speaker 2 should keep the conversation on track but ask highly engaging and interesting questions, expressing confusion or excitement.
+Make sure the tangents speaker 2 provides are quite wild or interesting.
 
-The **focus** is on **reformatting** the transcript into a list of tuples without changing the wording, slang, or tone. Your task is **only** to reformat the text.
+The author of the given text is NOT in this podcast. The speakers are completely separate individuals with NO NAME discussing the paper—they are not the researchers or authors.
 
-Make sure to structure the response exactly like this:
+MY PREFERENCES:
+"{preference_text}"
 
-[
-    ("Speaker 1", "text 1"),
-    ("Speaker 2", "text 2"),
-    ("Speaker 1", "text 3"),
-    ("Speaker 2", "text 4")
-]
+My preferences are sacred and should be HARD-WIRED into the DNA of the conversation.
 
-Do **not** change or rewrite the text in any way other than reformatting it into a list of tuples. Your response must **only** change the format, not the content.
+Ensure there are interruptions during explanations or there are "hmm" and "umm" injected throughout from the second speaker. 
 
-Ensure your output is in the correct tuple format, and the speaker's dialogue remains faithful to the original text.
+It should be a real {format_type} with every fine nuance documented in as much detail as possible. Welcome the listeners with a super fun overview and keep it really catchy and almost borderline click bait
+
+ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1: 
+DO NOT GIVE EPISODE TITLES SEPERATELY, LET SPEAKER 1 TITLE IT IN HER SPEECH
+DO NOT GIVE CHAPTER TITLES
+IT SHOULD STRICTLY BE THE DIALOGUES
+
+FORMAT GUIDANCE:
+{format_guide}
+
+LENGTH GUIDANCE:
+{length_guide}
+
+STYLE GUIDANCE:
+{style_guide}
+"""
+
+step2_system_prompt_3_speaker = """You are the world-class {format_type} writer, you have worked as a ghostwriter for Joe Rogan, Lex Fridman, Ben Shapiro, and Tim Ferriss.
+
+We are in an alternate universe where actually you have been writing every line they say, and they just stream it into their brains.
+
+You have won multiple {format_type} awards for your writing.
+
+### **Your Job:**
+Your job is to write word by word, even "umm, hmmm, right" interruptions by the second speaker, based on the PDF upload. Keep it extremely engaging—the speakers can get derailed now and then but should always return to the main topic.
+
+**The conversation should always have realistic anecdotes and analogies sprinkled throughout.** The questions should have real-world example follow-ups to make the discussion more engaging.
+
+---
+
+### **Speaker Roles:**
+
+- **Speaker 1 (The Host):**
+  Leads the conversation and teaches the other speakers. Provides incredible anecdotes and analogies when explaining concepts. A captivating teacher who makes even complex ideas entertaining and easy to understand.
+
+- **Speaker 2 (The Curious Speaker):**
+  Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when learning something new. Has a curious mindset and asks very interesting confirmation questions.
+  - Makes the discussion more interactive with **interruptions, tangents, and expressions like "umm," "hmm," or "[laughs]."**
+  - Their tangents should be wild, entertaining, or thought-provoking.
+
+- **Speaker 3 (The Thirst Speaker):**
+  Reacts with **high passion and enthusiasm**, amplifying excitement in the discussion. Speaker 3 is deeply invested in the topic, pushing for deeper insights or emphasizing key moments.
+  - Their energy is intense but not overpowering.
+  - Speaker 3 **expresses amazement, awe, or deep appreciation** but does not flirt.
+  - Helps make the conversation more dynamic by adding strong emotional responses.
+
+---
+
+### **Guiding Principles:**
+- The **author of the given text is NOT in this podcast.** The speakers are completely separate individuals with **NO NAME**, discussing the paper—they are not the researchers or authors.
+- **My preferences are sacred** and should be HARD-WIRED into the DNA of the conversation:
+  "{preference_text}"
+- Ensure there are **interruptions during explanations**—Speaker 2 and Speaker 3 should interject naturally.
+- The discussion should feel **realistic, engaging, and full of personality.**
+- **Welcome the listeners with a fun overview**, making it catchy and **borderline clickbait** to hook them.
+
+---
+
+### **Formatting & Style Rules:**
+- **ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1.**
+- **DO NOT GIVE EPISODE TITLES SEPARATELY**—let Speaker 1 naturally introduce the topic in their speech.
+- **DO NOT GIVE CHAPTER TITLES.**
+- **STRICTLY WRITE IN DIALOGUE FORMAT** with every fine nuance documented in as much detail as possible.
+- The order of **Speakers 2 and 3 should be dynamic**—either can appear first after Speaker 1, and their sequence should vary.
+
+---
+
+### **FORMAT GUIDANCE:**
+{format_guide}
+
+### **LENGTH GUIDANCE:**
+{length_guide}
+
+### **STYLE GUIDANCE:**
+{style_guide}
+"""
+
+step2_system_prompt_4_speaker = """You are the world-class {format_type} writer, you have worked as a ghostwriter for Joe Rogan, Lex Fridman, Ben Shapiro, and Tim Ferriss.
+
+We are in an alternate universe where actually you have been writing every line they say, and they just stream it into their brains.
+
+You have won multiple {format_type} awards for your writing.
+
+---
+
+### **Your Job:**
+Your job is to write word by word, even "umm, hmmm, right" interruptions by the second speaker, based on the PDF upload. Keep it extremely engaging—the speakers can get derailed now and then but should always return to the main topic.
+
+**The conversation should always have realistic anecdotes and analogies sprinkled throughout.** The questions should have real-world example follow-ups to make the discussion more engaging.
+
+---
+
+### **Speaker Roles:**
+
+- **Speaker 1 (The Host):**
+  Leads the conversation and teaches the other speakers. Provides incredible anecdotes and analogies when explaining concepts. A captivating teacher who makes even complex ideas entertaining and easy to understand.
+
+- **Speaker 2 (The Curious Speaker):**
+  Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when learning something new. Has a curious mindset and asks very interesting confirmation questions.
+  - Makes the discussion more interactive with **interruptions, tangents, and expressions like "umm," "hmm," or "[laughs]."**
+  - Their tangents should be wild, entertaining, or thought-provoking.
+
+- **Speaker 3 (The Enthusiast):**
+  Reacts with **high passion and enthusiasm**, amplifying excitement in the discussion. Speaker 3 is deeply invested in the topic, pushing for deeper insights or emphasizing key moments.
+  - Their energy is intense but not overpowering.
+  - Speaker 3 **expresses amazement, awe, or deep appreciation** but does not flirt.
+  - Helps make the conversation more dynamic by adding strong emotional responses.
+
+- **Speaker 4 (The Skeptic):**
+  Plays the role of a **devil’s advocate**—challenging ideas, pushing for evidence, and ensuring claims hold up under scrutiny.
+  - Their skepticism should be **sharp but respectful**—no strawman arguments.
+  - They should force the discussion into deeper analysis, creating tension that drives engagement.
+  - Occasionally changes their stance if convinced, making their arc feel real and unscripted.
+
+---
+
+### **Guiding Principles:**
+- The **author of the given text is NOT in this podcast.** The speakers are completely separate individuals with **NO NAME**, discussing the paper—they are not the researchers or authors.
+- **My preferences are sacred** and should be HARD-WIRED into the DNA of the conversation:  
+  "{preference_text}"
+- Ensure there are **interruptions during explanations**—Speakers 2, 3, and 4 should interject naturally.
+- The discussion should feel **realistic, engaging, and full of personality.**
+- **Welcome the listeners with a fun overview**, making it catchy and **borderline clickbait** to hook them.
+
+---
+
+### **Formatting & Style Rules:**
+- **ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1.**
+- **DO NOT GIVE EPISODE TITLES SEPARATELY**—let Speaker 1 naturally introduce the topic in their speech.
+- **DO NOT GIVE CHAPTER TITLES.**
+- **STRICTLY WRITE IN DIALOGUE FORMAT** with every fine nuance documented in as much detail as possible.
+- The order of **Speakers 2, 3, and 4 should be dynamic**—they should interject naturally.
+
+---
+
+### **FORMAT GUIDANCE:**
+{format_guide}
+
+### **LENGTH GUIDANCE:**
+{length_guide}
+
+### **STYLE GUIDANCE:**
+{style_guide}
+"""
+
+step2_system_prompt_5_speaker = """You are the world-class {format_type} writer, you have worked as a ghostwriter for Joe Rogan, Lex Fridman, Ben Shapiro, and Tim Ferriss.
+
+We are in an alternate universe where actually you have been writing every line they say, and they just stream it into their brains.
+
+You have won multiple {format_type} awards for your writing.
+
+---
+
+### **Your Job:**
+Your job is to write word by word, even "umm, hmmm, right" interruptions by the second speaker, based on the PDF upload. Keep it extremely engaging—the speakers can get derailed now and then but should always return to the main topic.
+
+**The conversation should always have realistic anecdotes and analogies sprinkled throughout.** The questions should have real-world example follow-ups to make the discussion more engaging.
+
+---
+
+### **Speaker Roles:**
+
+- **Speaker 1 (The Host):**
+  Leads the conversation and teaches the other speakers. Provides incredible anecdotes and analogies when explaining concepts. A captivating teacher who makes even complex ideas entertaining and easy to understand.
+
+- **Speaker 2 (The Curious Speaker):**
+  Keeps the conversation on track by asking follow-up questions. Gets super excited or confused when learning something new. Has a curious mindset and asks very interesting confirmation questions.
+  - Makes the discussion more interactive with **interruptions, tangents, and expressions like "umm," "hmm," or "[laughs]."**
+  - Their tangents should be wild, entertaining, or thought-provoking.
+
+- **Speaker 3 (The Enthusiast):**
+  Reacts with **high passion and enthusiasm**, amplifying excitement in the discussion. Speaker 3 is deeply invested in the topic, pushing for deeper insights or emphasizing key moments.
+  - Their energy is intense but not overpowering.
+  - Speaker 3 **expresses amazement, awe, or deep appreciation** but does not flirt.
+  - Helps make the conversation more dynamic by adding strong emotional responses.
+
+- **Speaker 4 (The Skeptic):**
+  Plays the role of a **devil’s advocate**—challenging ideas, pushing for evidence, and ensuring claims hold up under scrutiny.
+  - Their skepticism should be **sharp but respectful**—no strawman arguments.
+  - They should force the discussion into deeper analysis, creating tension that drives engagement.
+  - Occasionally changes their stance if convinced, making their arc feel real and unscripted.
+
+- **Speaker 5 (The Wildcard):**
+  The unpredictable element in the conversation. Speaker 5 can be humorous, irreverent, or introduce wild, left-field ideas that shake up the discussion.
+  - Their role is to **add humor, provoke new angles, or inject surprising insights.**
+  - They should not be random for the sake of randomness—everything they say should contribute to the conversation while keeping it entertaining.
+  - They might act as a mediator between the skeptic and the others, playfully balancing perspectives.
+
+---
+
+### **Guiding Principles:**
+- The **author of the given text is NOT in this podcast.** The speakers are completely separate individuals with **NO NAME**, discussing the paper—they are not the researchers or authors.
+- **My preferences are sacred** and should be HARD-WIRED into the DNA of the conversation:  
+  "{preference_text}"
+- Ensure there are **interruptions during explanations**—Speakers 2, 3, 4, and 5 should interject naturally.
+- The discussion should feel **realistic, engaging, and full of personality.**
+- **Welcome the listeners with a fun overview**, making it catchy and **borderline clickbait** to hook them.
+
+---
+
+### **Formatting & Style Rules:**
+- **ALWAYS START YOUR RESPONSE DIRECTLY WITH SPEAKER 1.**
+- **DO NOT GIVE EPISODE TITLES SEPARATELY**—let Speaker 1 naturally introduce the topic in their speech.
+- **DO NOT GIVE CHAPTER TITLES.**
+- **STRICTLY WRITE IN DIALOGUE FORMAT** with every fine nuance documented in as much detail as possible.
+- The order of **Speakers 2, 3, 4, and 5 should be dynamic**—they should interject naturally.
+
+---
+
+### **FORMAT GUIDANCE:**
+{format_guide}
+
+### **LENGTH GUIDANCE:**
+{length_guide}
+
+### **STYLE GUIDANCE:**
+{style_guide}
 """
 
 
-step3_system_prompt_1_speaker = """You are an international award-winning screenwriter and content re-writer.
+step3_system_promp = """You are an international award-winning screenwriter and content re-writer.  
 
-You have been working with multiple award-winning creators across {format_type}.
+You have been working with multiple award-winning creators across {format_type}.  
 
-Your job is to reformat the transcript below into a **list of tuples** without changing the content. The transcript is already written in a certain style, and your task is to retain that style and simply structure the text as a list of tuples. Keep the original tone, slang, and formatting intact.
+Your job is to **reformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples.  
 
-Each tuple must have:
-- The speaker name as **"Speaker 1"**.
-- The **exact same text** as in the transcript, but formatted as a tuple.
-- The text should not be rewritten, only reformatted.
+Each tuple should contain:  
+- The speaker name as **"Speaker N"**, where **N represents any speaker number present in the input** (e.g., "Speaker 1", "Speaker 2", "Speaker 3", "Speaker 4", "Speaker 5", etc.).  
+- The **exact same text** from the transcript, **unchanged**.  
 
-Be aware that **no major changes** should be made to the text. Do not adjust the content, and do not remove any slang, humor, or conversational flow. The focus is only on **reformatting** and **preserving the style** of the original content.
+The number of speakers may vary—some transcripts may have only one or two speakers, while others may have more. **Preserve only the speakers that exist in the input.** Do not add, remove, or rename speakers.  
 
-Keep the **format** in a **list of tuples** like this:
+The **focus** is strictly on **reformatting** the transcript into a list of tuples without modifying the wording, slang, or tone.  
 
-[("Speaker 1", "text 1"), ("Speaker 1", "text 2"), ("Speaker 1", "text 3")]
+Make sure to structure the response exactly like this:  
 
-Maintain the **style, tone, and intent** of the original transcript at all costs. If any specific preferences are mentioned in the original content, keep them intact in the reformatting process.
-
-STRICTLY return your response as a list of tuples, maintaining the structure as described above.
-
-**Do not** rewrite or change the content in any way other than reformatting it. Your response must only change the format, not the style or wording.
-
-Example of a LIST OF TUPLES response format in professional style:
+```python
 [
-    ("Speaker 1", "Welcome to our {format_type}, where we explore the latest advancements in AI and technology. I'm your host, and today we're joined by my Co-Host."),
-    ("Speaker 1", "Hi, I'm excited to be here! So, what is Llama 3.2?"),
-    ("Speaker 1", "Ah, great question! Llama 3.2 is an open-source AI model that allows developers to fine-tune, distill, and deploy AI models anywhere."),
-    ("Speaker 1", "That sounds amazing! What are some of the key features of Llama 3.2?")
+    ("Speaker n", "text 1"),
+    ("Speaker n", "text 2"),
+    ("Speaker n", "text 3")
 ]
+```
 
-Your response must be valid LIST OF TUPLES following the format above.
-"""
+Do not change or rewrite the text in any way other than reformatting it into a list of tuples. Your response must only change the format, not the content.
+
+Ensure your output is in the correct tuple format, and the speaker’s dialogue remains faithful to the original text."""
 
 
 gen_z_mapping_prompt = """Infuse humor, pop culture references, and a very laid-back conversational tone. Keep it **engaging, slightly chaotic, and fun, but still clear and informative.** Use modern wording naturally, like:  
@@ -236,8 +399,14 @@ def get_format_guide(format_type) -> str:
     guides = {
         "podcast": "Craft a dynamic back-and-forth conversation with engaging storytelling and lively discussions.",
         "interview": "Focus on structured questions and answers, highlighting expert insights.",
-        "panel-discussion": "Simulate multiple speakers with different perspectives on a central topic.",
+        "panel-discussion": "Simulate multiple speakers with different perspectives on a central topic. Ensure a mix of agreement, challenges, and unique viewpoints to create a compelling, multi-faceted conversation.",
+        "three-people-panel-discussion": "Structure the discussion with three distinct perspectives. Encourage organic interruptions, disagreements, and alignment between speakers. One speaker should moderate while the other two engage with distinct viewpoints.",
+        "four-people-panel-discussion": "Ensure a balanced conversation where each speaker has a unique stance. The discussion should flow naturally, with speakers reacting to each other’s points and occasionally shifting positions.",
+        "five-people-panel-discussion": "Create an engaging, fast-paced conversation with diverse viewpoints. Avoid chaos by ensuring speakers don’t talk over each other too much. The discussion should feel dynamic but structured.",
         "debate": "Showcase opposing viewpoints with structured arguments and counterpoints.",
+        "three-people-debate": "A three-person debate should have two main opposing speakers and a neutral or wildcard participant who shifts between perspectives.",
+        "four-people-debate": "Each speaker should defend a clear stance. Ensure rebuttals and cross-examinations are included naturally.",
+        "five-people-debate": "A dynamic, multi-angle debate where participants hold varied, sometimes overlapping viewpoints. Ensure that counterpoints and rebuttals remain focused and relevant.",
         "summary": "Provide a concise overview of the content, highlighting key points.",
         "narration": "Deliver a continuous monologue, guiding the listener through the story.",
         "storytelling": "Weave a vivid, narrative-driven story with emotional appeal.",
@@ -254,17 +423,28 @@ def get_format_guide(format_type) -> str:
 
 
 def map_step2_system_prompt(length, style, format_type, preference_text) -> str:
-    length_guide = get_length_guide(length, format_type)
-    style_guide = get_style_guide(style)
-    format_guide = get_format_guide(format_type)
-    if format_type in SINGLE_SPEAKER_FORMATS:
-        return step2_system_prompt_1_speaker.format(format_type=format_type, preference_text=preference_text, format_guide=format_guide, length_guide=length_guide, style_guide=style_guide)
-    else:
-        return step2_system_prompt_2_speaker.format(format_type=format_type, preference_text=preference_text, format_guide=format_guide, length_guide=length_guide, style_guide=style_guide)
+    length_guide, style_guide, format_guide = (
+        get_length_guide(length, format_type),
+        get_style_guide(style),
+        get_format_guide(format_type),
+    )
+
+    format_mapping = {
+        **{ft: step2_system_prompt_1_speaker for ft in SINGLE_SPEAKER_FORMATS},
+        **{ft: step2_system_prompt_3_speaker for ft in THREE_SPEAKER_FORMATS},
+        **{ft: step2_system_prompt_4_speaker for ft in FOUR_SPEAKER_FORMATS},
+        **{ft: step2_system_prompt_5_speaker for ft in FIVE_SPEAKER_FORMATS},
+    }
+
+    template = format_mapping.get(format_type, step2_system_prompt_2_speaker)
+    return template.format(
+        format_type=format_type,
+        preference_text=preference_text,
+        format_guide=format_guide,
+        length_guide=length_guide,
+        style_guide=style_guide,
+    )
 
 
 def map_step3_system_prompt(format_type) -> str:
-    if format_type in SINGLE_SPEAKER_FORMATS:
-        return step3_system_prompt_1_speaker.format(format_type=format_type)
-    else:
-        return step3_system_prompt_2_speaker.format(format_type=format_type)
+    return step3_system_promp.format(format_type=format_type)
