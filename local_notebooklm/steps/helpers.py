@@ -13,24 +13,51 @@ FormatType = Literal[
     "lecture", "tutorial", "q-and-a",
     "news-report", "executive-brief", "meeting", "analysis"
 ]
+
+
 SingleSpeakerFormats = Literal[
     "summary", "narration", "storytelling", "explainer",
     "lecture", "tutorial", "news-report", "executive-brief", "analysis"
-]
-TwoSpeakerFormats = Literal[
-    "podcast", "interview", "panel-discussion",
-    "debate", "q-and-a", "meeting"
 ]
 SINGLE_SPEAKER_FORMATS = {
     "summary", "narration", "storytelling", "explainer",
     "lecture", "tutorial", "news-report", "executive-brief", "analysis"
 }
 
+TwoSpeakerFormats = Literal[
+    "podcast", "interview", "panel-discussion",
+    "debate", "q-and-a", "meeting"
+]
 TWO_SPEAKER_FORMATS = {
     "podcast", "interview", "panel-discussion",
     "debate", "q-and-a", "meeting"
 }
+
+ThreeSpeakerFormats = Literal[
+    "three-people-podcast", "three-people-panel-discussion", "three-people-debate"
+]
+THREE_SPEAKER_FORMATS = {
+    "three-people-podcast", "three-people-panel-discussion", "three-people-debate"
+}
+
+FourSpeakerFormats = Literal[
+    "four-people-podcast", "four-people-panel-discussion", "four-people-debate"
+]
+FOUR_SPEAKER_FORMATS = {
+    "four-people-podcast", "four-people-panel-discussion", "four-people-debate"
+}
+
+FiveSpeakerFormats = Literal[
+    "five-people-podcast", "five-people-panel-discussion", "five-people-debate"
+]
+FIVE_SPEAKER_FORMATS = {
+    "five-people-podcast", "five-people-panel-discussion", "five-people-debate"
+}
+
+
 LengthType = Literal["short", "medium", "long", "very-long"]
+
+
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
 
 

@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional
 from ast import literal_eval
 from pathlib import Path
 import logging, pickle
+from tqdm import tqdm
 
 
 logger = logging.getLogger(__name__)
@@ -35,11 +36,12 @@ def generate_rewritten_transcript(
     max_tokens,
     temperature,
     format_type,
+    language
 ) -> str:
     try:
         wait_for_next_step()
         if system_prompt == None:
-            system_prompt = map_step3_system_prompt(format_type=format_type)
+            system_prompt = map_step3_system_prompt(format_type=format_type, language=language)
         else:
             system_prompt = system_prompt
         conversation = [
@@ -65,6 +67,7 @@ def generate_rewritten_transcript_with_overlap(
     temperature,
     format_type,
     system_prompt,
+    language,
     chunk_size=8000,
     overlap_percent=20
 ) -> str:
@@ -88,7 +91,8 @@ def generate_rewritten_transcript_with_overlap(
         # Process each chunk and combine results
         combined_transcript = []
         
-        for i, chunk in enumerate(chunks):
+        # Add tqdm progress bar
+        for i, chunk in tqdm(enumerate(chunks), total=len(chunks), desc="Processing transcript chunks"):
             logger.info(f"Processing chunk {i+1}/{len(chunks)}")
             
             # Add context for continuation chunks
@@ -103,11 +107,19 @@ def generate_rewritten_transcript_with_overlap(
             else:
                 context += "\n\nThis is the final part of the conversation. You may conclude naturally if appropriate."
             
+            # Be more explicit about the format required
+            format_instruction = """
+            CRITICALLY IMPORTANT: Your output MUST be in the exact format of a Python list of tuples, where each tuple contains a speaker name and their dialogue. 
+            Example format: [('Speaker1', 'This is what Speaker1 says.'), ('Speaker2', 'This is Speaker2's response.')]
+            Ensure all quotes are properly escaped and the entire response must be valid Python syntax that can be parsed by literal_eval().
+            """
+            
             # Customize system prompt based on chunk position
             if system_prompt == None:
-                chunk_system_prompt = map_step3_system_prompt(format_type=format_type)
+                chunk_system_prompt = map_step3_system_prompt(format_type=format_type, language=language) + "\n" + format_instruction
             else:
-                chunk_system_prompt = system_prompt
+                chunk_system_prompt = system_prompt + "\n" + format_instruction
+                
             if not is_final_chunk:
                 chunk_system_prompt += "\n\nIMPORTANT: Since this is not the final part of the conversation, DO NOT include any goodbyes, conclusions, or wrap-ups. The conversation should continue naturally."
             
@@ -116,6 +128,7 @@ def generate_rewritten_transcript_with_overlap(
                 {"role": "user", "content": f"{chunk}\n\n{context}"},
             ]
             
+            # Get response from model
             chunk_transcript = generate_text(
                 client=client,
                 model=model_name,
@@ -124,9 +137,18 @@ def generate_rewritten_transcript_with_overlap(
                 temperature=temperature,
             )
             
-            # Parse the chunk transcript
+            # Clean up transcript for parsing
+            cleaned_transcript = chunk_transcript.strip()
+            logger.debug(f"Raw chunk {i+1} transcript (first 200 chars): {cleaned_transcript[:200]}...")
+            
+            # Try to parse the transcript
             try:
-                chunk_data = literal_eval(chunk_transcript)
+                # Clean up common issues with quotes and formatting
+                cleaned_transcript = cleaned_transcript.replace("'", "'").replace(""", "\"").replace(""", "\"")
+                cleaned_transcript = cleaned_transcript.replace('…', '...')
+                
+                # Try to parse the cleaned transcript
+                chunk_data = literal_eval(cleaned_transcript)
                 
                 # Filter out any goodbye-like messages in non-final chunks
                 if not is_final_chunk:
@@ -160,8 +182,43 @@ def generate_rewritten_transcript_with_overlap(
                     # Skip first 1-2 entries as they might overlap with previous chunk
                     skip_count = min(2, len(chunk_data) // 10)  # Skip ~10% or at most 2 entries
                     combined_transcript.extend(chunk_data[skip_count:])
+            
             except Exception as e:
-                raise TranscriptGenerationError(f"Failed to parse chunk {i+1}: {str(e)}")
+                # If parsing fails, try to fix the format with the model
+                logger.warning(f"Failed to parse chunk {i+1}: {str(e)}. Attempting to fix format...")
+                
+                fix_prompt = [
+                    {"role": "system", "content": "Convert the following text into valid Python syntax as a list of tuples with format: [('Speaker1', 'Text1'), ('Speaker2', 'Text2'), ...]. Make sure it's valid for literal_eval()."},
+                    {"role": "user", "content": chunk_transcript}
+                ]
+                
+                try:
+                    fixed_transcript = generate_text(
+                        client=client,
+                        model=model_name,
+                        messages=fix_prompt,
+                        max_tokens=max_tokens,
+                        temperature=0.2,  # Lower temperature for more deterministic output
+                    )
+                    
+                    # Try to parse the fixed transcript
+                    chunk_data = literal_eval(fixed_transcript.strip())
+                    
+                    # Add to combined transcript
+                    if i == 0:
+                        combined_transcript.extend(chunk_data)
+                    else:
+                        skip_count = min(2, len(chunk_data) // 10)
+                        combined_transcript.extend(chunk_data[skip_count:])
+                        
+                    logger.info(f"Successfully fixed and parsed chunk {i+1}")
+                    
+                except Exception as retry_e:
+                    # If all attempts fail, raise a detailed error
+                    error_msg = f"Failed to parse chunk {i+1} after correction attempt: {str(retry_e)}"
+                    logger.error(error_msg)
+                    logger.error(f"Raw output (first 300 chars): {chunk_transcript[:300]}...")
+                    raise TranscriptGenerationError(error_msg)
         
         # Convert back to string representation
         return str(combined_transcript)
@@ -191,7 +248,8 @@ def step3(
     input_file: str = None,
     output_dir: str = None,
     format_type: FormatType = "podcast",
-    system_prompt: str = None
+    system_prompt: str = None,
+    language: str = "english"
 ) -> str:
     try:
         output_dir = Path(output_dir)
@@ -219,7 +277,8 @@ def step3(
                 max_tokens=config["Step3"]["max_tokens"],
                 temperature=config["Step1"]["temperature"],
                 chunk_size=config["Step3"].get("chunk_size", 8000),
-                overlap_percent=config["Step3"].get("overlap_percent", 10)
+                overlap_percent=config["Step3"].get("overlap_percent", 10),
+                language=language
             )
         else:
             # Generate rewritten transcript in one go
@@ -231,7 +290,8 @@ def step3(
                 input_text=input_text,
                 format_type=format_type,
                 max_tokens=config["Step3"]["max_tokens"],
-                temperature=config["Step1"]["temperature"]
+                temperature=config["Step1"]["temperature"],
+                language=language
             )
 
         # Validate transcript format
