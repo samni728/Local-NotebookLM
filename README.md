@@ -20,7 +20,7 @@ A local AI-powered tool that converts PDF documents into engaging audio's such a
 
 <audio controls>
   <source src="./examples/podcast.wav" type="audio/mpeg">
-  Your browser does not support the audio element.
+  Your browser does not support the audio element. You can manualy download the file here './examples/podcast.wav'.
 </audio>
 
 ## Prerequisites
