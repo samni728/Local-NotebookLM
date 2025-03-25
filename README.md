@@ -68,7 +68,10 @@ You can use the default configuration or create a custom JSON config file with t
 
 ```json
 {
-    "Co-Host-Speaker-Voice": "af_sky+af_bella",
+    "Co-Host-Speaker-1-Voice": "af_sky+af_bella",
+    "Co-Host-Speaker-2-Voice": "af_echo",
+    "Co-Host-Speaker-3-Voice": "af_nova",
+    "Co-Host-Speaker-4-Voice": "af_shimmer",
     "Host-Speaker-Voice": "af_alloy",
 
     "Small-Text-Model": {
@@ -250,6 +253,10 @@ Local-NotebookLM now supports both single-speaker and two-speaker formats:
 - debate
 - q-and-a
 - meeting
+
+**Multi-Speaker Formats:**
+- panel-discussion (3, 4, or 5 speakers)
+- debate (3, 4, or 5 speakers)
 
 #### Example Commands
 
