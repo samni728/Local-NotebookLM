@@ -12,3 +12,6 @@ test.text
 
 .venv
 venv
+
+.conda
+conda
