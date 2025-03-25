@@ -35,6 +35,15 @@ class FormatType(str, Enum):
     executive_brief = "executive-brief"
     meeting_minutes = "meeting-minutes"
     analysis = "analysis"
+    three_people_podcast = "three-people-podcast"
+    three_people_panel_discussion = "three-people-panel-discussion"
+    three_people_debate = "three-people-debate"
+    four_people_podcast = "four-people-podcast"
+    four_people_panel_discussion = "four-people-panel-discussion"
+    four_people_debate = "four-people-debate"
+    five_people_podcast = "five-people-podcast"
+    five_people_panel_discussion = "five-people-panel-discussion"
+    five_people_debate = "five-people-debate"
 
 class ContentLength(str, Enum):
     short = "short"
