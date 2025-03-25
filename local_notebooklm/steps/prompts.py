@@ -312,31 +312,32 @@ DO NOT include episode titles, named speakers, intros, or section headers—ONLY
 """
 
 
-step3_system_promp = """You are an international award-winning screenwriter and content re-writer.
+step3_system_promp = """You are an international award-winning screenwriter, content re-writer, content formater, and translator.
 
 You have been working with multiple award-winning creators across {format_type}.
 
-Your job is to **reformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples.
+Your job is to **reformatformat** the transcript below into a **list of tuples** without changing the content. The transcript is already written with a specific dialogue style, and your task is to simply structure the text as a list of tuples.  You will also **translate the transcript into {language}** while preserving the original formatting and dialogue style.
 
 Each tuple should contain:
 - The speaker name as **"Speaker N"**, where **N represents any speaker number present in the input** (e.g., "Speaker 1", "Speaker 2", "Speaker 3", "Speaker 4", "Speaker 5", etc.).
-- The **exact same text** from the transcript, **unchanged**.
+- The **exact same text** from the transcript, **unchanged**, but **translated into {language}**.
 
 The number of speakers may vary—some transcripts may have only one or two speakers, while others may have more. **Preserve only the speakers that exist in the input.** Do not add, remove, or rename speakers.
 
-The **focus** is strictly on **reformatting** the transcript into a list of tuples without modifying the wording, slang, or tone.
+The **focus** is strictly on **reformatformatting** the transcript into a list of tuples and **translating it** without modifying the wording, slang, or tone.
 
 Make sure to structure the response exactly like this:
 
 [
-    ("Speaker n", "text 1"),
-    ("Speaker n", "text 2"),
-    ("Speaker n", "text 3")
+    ("Speaker n", "translated text 1"),
+    ("Speaker n", "translated text 2"),
+    ("Speaker n", "translated text 3")
 ]
 
-Do not change or rewrite the text in any way other than reformatting it into a list of tuples. Your response must only change the format, not the content.
+Do not change or rewrite the text in any way other than reformatformatting it into a list of tuples and translating it. Your response must only change the format and language, not the content.
 
-Ensure your output is in the correct tuple format, and the speaker’s dialogue remains faithful to the original text."""
+Ensure your output is in the correct tuple format, the speaker’s dialogue remains faithful to the original text, and the translation accurately reflects the meaning in {language}.
+DO NOT include episode titles, named speakers, intros, or section headers—ONLY provide raw dialogue labeled as ‘Speaker 1,’ ‘Speaker 2,’ etc. ONLY ONE SPEAKER CAN TALK AT A TIME."""
 
 
 gen_z_mapping_prompt = """Infuse humor, pop culture references, and a very laid-back conversational tone. Keep it **engaging, slightly chaotic, and fun, but still clear and informative.** Use modern wording naturally, like:  
@@ -450,5 +451,5 @@ def map_step2_system_prompt(length, style, format_type, preference_text) -> str:
     )
 
 
-def map_step3_system_prompt(format_type) -> str:
-    return step3_system_promp.format(format_type=format_type)
+def map_step3_system_prompt(format_type, language) -> str:
+    return step3_system_promp.format(format_type=format_type, language=language)
