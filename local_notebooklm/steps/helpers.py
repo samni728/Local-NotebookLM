@@ -34,12 +34,12 @@ TWO_SPEAKER_FORMATS = {
 }
 
 MulitSpeakerFormats = Literal[
-    "four-people-panel-discussion", "three-people-panel-discussion",
-    "three-people-debate", "four-people-debate"
+    "three-people-panel-discussion", "four-people-panel-discussion", "five-people-panel-discussion",
+    "three-people-debate", "four-people-debate", "five-people-debate"
 ]
 MULTI_SPEAKER_FORMATS = {
-    "four-people-panel-discussion", "three-people-panel-discussion",
-    "three-people-debate", "four-people-debate"
+    "three-people-panel-discussion", "four-people-panel-discussion", "five-people-panel-discussion",
+    "three-people-debate", "four-people-debate", "five-people-debate"
 }
 
 
