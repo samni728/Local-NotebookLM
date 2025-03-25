@@ -4,6 +4,7 @@ from typing import Dict, Any, Optional
 from ast import literal_eval
 from pathlib import Path
 import logging, pickle
+from tqdm import tqdm
 
 
 logger = logging.getLogger(__name__)
@@ -88,7 +89,8 @@ def generate_rewritten_transcript_with_overlap(
         # Process each chunk and combine results
         combined_transcript = []
         
-        for i, chunk in enumerate(chunks):
+        # Add tqdm progress bar
+        for i, chunk in tqdm(enumerate(chunks), total=len(chunks), desc="Processing transcript chunks"):
             logger.info(f"Processing chunk {i+1}/{len(chunks)}")
             
             # Add context for continuation chunks

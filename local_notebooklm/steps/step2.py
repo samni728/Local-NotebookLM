@@ -3,6 +3,7 @@ from .prompts import map_step2_system_prompt
 from typing import Any, Dict, Optional
 import logging, pickle, time
 from pathlib import Path
+from tqdm import tqdm
 
 
 logger = logging.getLogger(__name__)
@@ -89,8 +90,8 @@ def generate_transcript(
                 temperature=temperature,
             )
             
-            # Process remaining chunks
-            for i, chunk in enumerate(chunks[1:], 2):
+            # Process remaining chunks with tqdm progress bar
+            for i, chunk in tqdm(enumerate(chunks[1:], 2), total=len(chunks)-1, desc="Processing chunks"):
                 # Add delay between API calls
                 time.sleep(3)
                 

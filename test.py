@@ -8,7 +8,7 @@ success, result = podcast_processor(
     style="normal",
     # preference="Focus on the key technical aspects, this podcast shoudl only be for Machine Learning researchers and engineers.",
     output_dir="./examples/test_output",
-    # skip_to=3
+    skip_to=2
 )
 
 if success:
