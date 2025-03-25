@@ -15,7 +15,7 @@ from .processor import podcast_processor
 app = FastAPI(
     title="Podcast Generator API",
     description="API for generating podcasts from PDF documents",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 # Define enums for the choices

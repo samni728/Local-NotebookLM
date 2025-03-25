@@ -16,6 +16,7 @@ def main():
     parser.add_argument("--preference", type=str, help="Additional preferences or instructions")
     parser.add_argument("--output-dir", type=str, default="./output", help="Directory to store output files")
     parser.add_argument("--skip-to", type=int, choices=[1, 2, 3, 4], help="Skip to a specific step (1-4)")
+    parser.add_argument("--language", type=str, help="Additional preferences or instructions")
     
     args = parser.parse_args()
     
@@ -28,7 +29,8 @@ def main():
         style=args.style,
         preference=args.preference,
         output_dir=args.output_dir,
-        skip_to=args.skip_to
+        skip_to=args.skip_to,
+        language=args.language
     )
 
     if success:

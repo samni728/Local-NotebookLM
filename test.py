@@ -1,10 +1,10 @@
 from local_notebooklm.processor import podcast_processor
 
 success, result = podcast_processor(
-    pdf_path="./examples/JOSIEv4o.pdf",
+    pdf_path="./examples/MoshiVis.pdf",
     config_path="config.json",
-    format_type="three-people-podcast",
-    length="medium",
+    format_type="four-people-podcast",
+    length="long",
     style="normal",
     # preference="Focus on the key technical aspects, this podcast shoudl only be for Machine Learning researchers and engineers.",
     output_dir="./examples/test_output",
