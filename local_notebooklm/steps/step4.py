@@ -67,8 +67,11 @@ def step4(
     output_dir: str = None
 ) -> Path:
     model_name = config["Text-To-Speech-Model"]["model"]
-    co_host = config["Co-Host-Speaker-Voice"]
     host = config["Host-Speaker-Voice"]
+    co_host_1 = config["Co-Host-Speaker-1-Voice"]
+    co_host_2 = config["Co-Host-Speaker-2-Voice"]
+    co_host_4 = config["Co-Host-Speaker-3-Voice"]
+    co_host_5 = config["Co-Host-Speaker-4-Voice"]
     response_format = config["Text-To-Speech-Model"].get("audio_format", "wav")
     
     try:
@@ -96,13 +99,40 @@ def step4(
                     voice=host,
                     response_format=response_format
                 )
+            elif speaker == "Speaker 3":
+                generate_speaker_audio(
+                    client=client,
+                    text=text,
+                    model_name=model_name,
+                    output_path=output_path,
+                    voice=co_host_2,
+                    response_format=response_format
+                )
+            elif speaker == "Speaker 4":
+                generate_speaker_audio(
+                    client=client,
+                    text=text,
+                    model_name=model_name,
+                    output_path=output_path,
+                    voice=co_host_4,
+                    response_format=response_format
+                )
+            elif speaker == "Speaker 3":
+                generate_speaker_audio(
+                    client=client,
+                    text=text,
+                    model_name=model_name,
+                    output_path=output_path,
+                    voice=co_host_5,
+                    response_format=response_format
+                )
             else:
                 generate_speaker_audio(
                     client=client,
                     text=text,
                     model_name=model_name,
                     output_path=output_path,
-                    voice=co_host,
+                    voice=co_host_1,
                     response_format=response_format
                 )
         
