@@ -2,7 +2,7 @@
 
 ![logo](logo.jpeg)
 
-A local AI-powered tool that converts PDF documents into engaging podcasts, using local LLMs and TTS models.
+A local AI-powered tool that converts PDF documents into engaging audio's such as podcasts, using local LLMs and TTS models.
 
 ## Features
 
@@ -227,9 +227,8 @@ python -m local_notebooklm.start --pdf PATH_TO_PDF [options]
 | `--length` | Content length (short, medium, long, very-long) | medium |
 | `--style` | Content style (normal, casual, formal, technical, academic, friendly, gen-z, funny) | normal |
 | `--preference` | Additional focus preferences or instructions | None |
+| `--language` | Language the audio should be in | english |
 | `--output-dir` | Directory to store output files | ./output |
-
-Local-NotebookLM currently does NOT support multible languages other then english, you can try working around it by adding a text in the preferences saying what language the audio should be, also be sure the TTS model supports your desired language.
 
 #### Format Types
 
@@ -277,7 +276,7 @@ python -m local_notebooklm.start --pdf documents/research_paper.pdf --preference
 
 Using custom config:
 ```bash
-python -m local_notebooklm.start --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast
+python -m local_notebooklm.start --pdf documents/research_paper.pdf --config custom_config.json --output-dir ./my_podcast --language german
 ```
 
 ### Programmatic API
@@ -294,7 +293,8 @@ success, result = podcast_processor(
     length="long",
     style="professional",
     preference="Focus on the key technical aspects",
-    output_dir="./test_output"
+    output_dir="./test_output",
+    language="english"
 )
 
 if success:
@@ -447,6 +447,13 @@ flowchart TD
     class s1,s2,s3,s4,validate,extract,chunk1,process,read2,gen2,chunk2,read3,gen3,genOverlap,validate3,load4,genAudio,concat step
     class pdf,file1,file2,file3,fileAudio data
 ```
+
+## Multiple Language Support
+
+Local-NotebookLM now supports multiple languages. You can specify the language when using the programmatic API or through the command line.
+
+**Important Note:** When using a non-English language, ensure that both your selected LLM and TTS models support the desired language. Language support varies significantly between different models and providers. For optimal results, verify that your chosen models have strong capabilities in your target language before processing.
+
 
 ## Output Files
 
