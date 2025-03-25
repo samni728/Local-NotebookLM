@@ -70,8 +70,8 @@ def step4(
     host = config["Host-Speaker-Voice"]
     co_host_1 = config["Co-Host-Speaker-1-Voice"]
     co_host_2 = config["Co-Host-Speaker-2-Voice"]
-    co_host_4 = config["Co-Host-Speaker-3-Voice"]
-    co_host_5 = config["Co-Host-Speaker-4-Voice"]
+    co_host_3 = config["Co-Host-Speaker-3-Voice"]
+    co_host_4 = config["Co-Host-Speaker-4-Voice"]
     response_format = config["Text-To-Speech-Model"].get("audio_format", "wav")
     
     try:
@@ -89,52 +89,26 @@ def step4(
         # Generate audio segments
         for i, (speaker, text) in enumerate(tqdm(podcast_data, desc="Generating podcast segments"), 1):
             output_path = segments_dir / f"podcast_segment_{i}.wav"
-            
+
             if speaker == "Speaker 1":
-                generate_speaker_audio(
-                    client=client,
-                    text=text,
-                    model_name=model_name,
-                    output_path=output_path,
-                    voice=host,
-                    response_format=response_format
-                )
+                current_voice = host
             elif speaker == "Speaker 3":
-                generate_speaker_audio(
-                    client=client,
-                    text=text,
-                    model_name=model_name,
-                    output_path=output_path,
-                    voice=co_host_2,
-                    response_format=response_format
-                )
+                current_voice = co_host_2
             elif speaker == "Speaker 4":
-                generate_speaker_audio(
-                    client=client,
-                    text=text,
-                    model_name=model_name,
-                    output_path=output_path,
-                    voice=co_host_4,
-                    response_format=response_format
-                )
+                current_voice = co_host_3
             elif speaker == "Speaker 3":
-                generate_speaker_audio(
-                    client=client,
-                    text=text,
-                    model_name=model_name,
-                    output_path=output_path,
-                    voice=co_host_5,
-                    response_format=response_format
-                )
+                current_voice = co_host_4
             else:
-                generate_speaker_audio(
-                    client=client,
-                    text=text,
-                    model_name=model_name,
-                    output_path=output_path,
-                    voice=co_host_1,
-                    response_format=response_format
-                )
+                current_voice = co_host_1
+
+            generate_speaker_audio(
+                client=client,
+                text=text,
+                model_name=model_name,
+                output_path=output_path,
+                voice=current_voice,
+                response_format=response_format
+            )
         
         # Concatenate all segments
         logger.info("Concatenating audio segments...")
