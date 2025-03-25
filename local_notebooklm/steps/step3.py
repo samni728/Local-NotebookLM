@@ -36,11 +36,12 @@ def generate_rewritten_transcript(
     max_tokens,
     temperature,
     format_type,
+    language
 ) -> str:
     try:
         wait_for_next_step()
         if system_prompt == None:
-            system_prompt = map_step3_system_prompt(format_type=format_type)
+            system_prompt = map_step3_system_prompt(format_type=format_type, language=language)
         else:
             system_prompt = system_prompt
         conversation = [
@@ -66,6 +67,7 @@ def generate_rewritten_transcript_with_overlap(
     temperature,
     format_type,
     system_prompt,
+    language,
     chunk_size=8000,
     overlap_percent=20
 ) -> str:
@@ -114,7 +116,7 @@ def generate_rewritten_transcript_with_overlap(
             
             # Customize system prompt based on chunk position
             if system_prompt == None:
-                chunk_system_prompt = map_step3_system_prompt(format_type=format_type) + "\n" + format_instruction
+                chunk_system_prompt = map_step3_system_prompt(format_type=format_type, language=language) + "\n" + format_instruction
             else:
                 chunk_system_prompt = system_prompt + "\n" + format_instruction
                 
@@ -246,7 +248,8 @@ def step3(
     input_file: str = None,
     output_dir: str = None,
     format_type: FormatType = "podcast",
-    system_prompt: str = None
+    system_prompt: str = None,
+    language: str = "english"
 ) -> str:
     try:
         output_dir = Path(output_dir)
@@ -274,7 +277,8 @@ def step3(
                 max_tokens=config["Step3"]["max_tokens"],
                 temperature=config["Step1"]["temperature"],
                 chunk_size=config["Step3"].get("chunk_size", 8000),
-                overlap_percent=config["Step3"].get("overlap_percent", 10)
+                overlap_percent=config["Step3"].get("overlap_percent", 10),
+                language=language
             )
         else:
             # Generate rewritten transcript in one go
@@ -286,7 +290,8 @@ def step3(
                 input_text=input_text,
                 format_type=format_type,
                 max_tokens=config["Step3"]["max_tokens"],
-                temperature=config["Step1"]["temperature"]
+                temperature=config["Step1"]["temperature"],
+                language=language
             )
 
         # Validate transcript format

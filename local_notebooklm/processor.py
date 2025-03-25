@@ -14,7 +14,8 @@ def podcast_processor(
     style="normal",
     preference="nothing",
     output_dir="./output",
-    skip_to=None
+    skip_to: int = None,
+    language: str = "english"
 ):
     # Load config
     if config_path:
@@ -116,7 +117,8 @@ def podcast_processor(
                 input_file=transcript_file,
                 output_dir=str(output_dirs["step3"]),
                 format_type=format_type,
-                system_prompt=system_prompts["step3"]
+                system_prompt=system_prompts["step3"],
+                language=language
             )
         else:
             print("Skipping Step 3, assuming files exist in output directory...")
