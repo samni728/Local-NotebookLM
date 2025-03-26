@@ -124,7 +124,6 @@ def create_gradio_ui():
                 with gr.Accordion("View Clean Extracted Text", open=False):
                     clean_text = gr.Textbox(label="Clean Extracted Text", lines=10)
                 
-                # Add this new accordion for the podcast script
                 with gr.Accordion("View Podcast Script", open=False):
                     audio_script = gr.Textbox(label="Podcast Script", lines=15)
         
