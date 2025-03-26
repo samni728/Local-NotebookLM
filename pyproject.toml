@@ -17,10 +17,10 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 requires-python = ">=3.12"
-dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.dynamic]
-version = {attr = "local_notebooklm.version.__version__"}  # Adjust this path to match your actual module structure
+version = {attr = "local_notebooklm.version.__version__"}
+dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
 "Homepage" = "https://github.com/Goekdeniz-Guelmez//Local-NotebookLM"
