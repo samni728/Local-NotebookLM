@@ -2,32 +2,26 @@ import os
 import uuid
 import gradio as gr
 import sys
+import argparse
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if __name__ == "__main__":
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from local_notebooklm.processor import podcast_processor
 from local_notebooklm.steps.helpers import LengthType, FormatType, StyleType
 
 def process_podcast(pdf_file, config_file, format_type, length, style, language, additional_preference, output_dir):
-    """
-    Process the podcast generation based on user inputs
-    """
     if pdf_file is None:
         return "Please upload a PDF file first.", None, "", ""
     
-    # Create output directory if it doesn't exist
     os.makedirs(output_dir, exist_ok=True)
     
     try:
-        # In Gradio, pdf_file is a file path, not the file content
-        if hasattr(pdf_file, 'name'):  # For UploadFile objects
-            # For newer Gradio versions
+        if hasattr(pdf_file, 'name'):
             pdf_path = pdf_file.name
         else:
-            # For older Gradio versions or direct file paths
             pdf_path = pdf_file
         
-        # Use the provided config file or default
         if config_file is None:
             config_path = "./example_config.json"
         else:
@@ -36,7 +30,6 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
             else:
                 config_path = config_file
         
-        # Call the podcast processor with the file paths
         success, result = podcast_processor(
             pdf_path=pdf_path,
             config_path=config_path,
@@ -49,16 +42,14 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
         )
         
         if success:
-            # Get paths to generated files
-            podcast_audio_path = os.path.join(output_dir, "podcast.wav")
-            
-            # Read content of text files for display
+            audio_path = os.path.join(output_dir, "podcast.wav")
             file_contents = {}
             generated_files = [
                 "step1/extracted_text.txt",
                 "step1/clean_extracted_text.txt",
                 "step2/data.pkl",
-                "step3/podcast_ready_data.pkl"
+                "step3/podcast_ready_data.pkl",
+                "step3/podcast_ready_data.txt"
             ]
             
             for file in generated_files:
@@ -71,10 +62,9 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
                     except Exception as e:
                         file_contents[file] = f"Error reading file: {str(e)}"
             
-            # Return the audio file path and success message
-            return "Podcast Generated Successfully!", podcast_audio_path, file_contents.get("step1/extracted_text.txt", ""), file_contents.get("step1/clean_extracted_text.txt", "")
+            return "Audio Generated Successfully!", audio_path, file_contents.get("step1/extracted_text.txt", ""), file_contents.get("step1/clean_extracted_text.txt", ""), file_contents.get("step3/podcast_ready_data.txt", "")
         else:
-            return f"Failed to generate podcast: {result}", None, "", ""
+            return f"Failed to generate audio: {result}", None, "", ""
     
     except Exception as e:
         import traceback
@@ -82,10 +72,6 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
         return f"An error occurred: {str(e)}\n\nDetails:\n{error_details}", None, "", ""
 
 def create_gradio_ui():
-    """
-    Create a Gradio web UI for Local-NotebookLM
-    """
-    # Convert the Literal types to lists for Gradio dropdowns
     format_options = list(FormatType.__args__) if hasattr(FormatType, '__args__') else ["podcast"]
     length_options = list(LengthType.__args__) if hasattr(LengthType, '__args__') else ["medium"]
     style_options = list(StyleType.__args__) if hasattr(StyleType, '__args__') else ["conversational"]
@@ -95,9 +81,8 @@ def create_gradio_ui():
         
         with gr.Row():
             with gr.Column(scale=1):
-                # Input components
                 pdf_file = gr.File(label="Upload PDF", file_types=[".pdf"])
-                gr.Markdown("*Upload Config JSON (Optional) - Default: /Users/gokdenizgulmez/Desktop/Local-NotebookLM/example_config.json*")
+                gr.Markdown("*Upload Config JSON (Optional) - Default: ./example_config.json*")
                 config_file = gr.File(label="Config JSON", file_types=[".json"])
                 format_type = gr.Dropdown(choices=format_options, label="Select Format", value=format_options[0])
                 length = gr.Dropdown(choices=length_options, label="Select Length", value=length_options[1] if len(length_options) > 1 else length_options[0])
@@ -115,7 +100,6 @@ def create_gradio_ui():
                 generate_button = gr.Button("Generate Podcast")
             
             with gr.Column(scale=2):
-                # Output components
                 result_message = gr.Textbox(label="Status")
                 audio_output = gr.Audio(label="Generated Podcast", type="filepath")
                 
@@ -124,13 +108,15 @@ def create_gradio_ui():
                 
                 with gr.Accordion("View Clean Extracted Text", open=False):
                     clean_text = gr.Textbox(label="Clean Extracted Text", lines=10)
+                
+                # Add this new accordion for the podcast script
+                with gr.Accordion("View Podcast Script", open=False):
+                    audio_script = gr.Textbox(label="Podcast Script", lines=15)
         
-        # Footer
         gr.Markdown("---")
         gr.Markdown("Local-NotebookLM by Gökdeniz Gülmez")
         gr.Markdown("[GitHub Repository](https://github.com/Goekdeniz-Guelmez/Local-NotebookLM)")
         
-        # Set up event handler
         generate_button.click(
             fn=process_podcast,
             inputs=[pdf_file, config_file, format_type, length, style, language, additional_preference, output_dir],
@@ -139,12 +125,20 @@ def create_gradio_ui():
     
     return app
 
-def run_gradio_ui():
-    """
-    Entry point to run the Gradio web UI
-    """
+def run_gradio_ui(share=False, port=None):
     app = create_gradio_ui()
-    app.launch(share=False)
+    app.launch(share=share, server_port=port)
 
-if __name__ == "__main__":
-    run_gradio_ui()
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Run Local-NotebookLM web UI")
+    parser.add_argument("--share", action="store_true", help="Create a shareable link")
+    parser.add_argument("--port", type=int, default=None, help="Port to run the interface on")
+    
+    return parser.parse_args()
+
+def main():
+    args = parse_arguments()
+    run_gradio_ui(share=args.share, port=args.port)
+
+if __name__ == "__main__" or __name__ == "local_notebooklm.web_ui":
+    main()
