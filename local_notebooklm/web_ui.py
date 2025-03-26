@@ -74,6 +74,11 @@ def create_gradio_ui():
     """
     Create a Gradio web UI for Local-NotebookLM
     """
+    # Convert the Literal types to lists for Gradio dropdowns
+    format_options = list(FormatType.__args__) if hasattr(FormatType, '__args__') else ["podcast"]
+    length_options = list(LengthType.__args__) if hasattr(LengthType, '__args__') else ["medium"]
+    style_options = list(StyleType.__args__) if hasattr(StyleType, '__args__') else ["conversational"]
+    
     with gr.Blocks(title="Local-NotebookLM") as app:
         gr.Markdown("# 🎙️ Local-NotebookLM: PDF to Podcast Converter")
         
@@ -81,9 +86,9 @@ def create_gradio_ui():
             with gr.Column(scale=1):
                 # Input components
                 pdf_file = gr.File(label="Upload PDF", file_types=[".pdf"])
-                format_type = gr.Dropdown(choices=FormatType, label="Select Format", value=FormatType[0])
-                length = gr.Dropdown(choices=LengthType, label="Select Length", value=LengthType[1])
-                style = gr.Dropdown(choices=StyleType, label="Select Style", value=StyleType[0])
+                format_type = gr.Dropdown(choices=format_options, label="Select Format", value=format_options[0])
+                length = gr.Dropdown(choices=length_options, label="Select Length", value=length_options[1] if len(length_options) > 1 else length_options[0])
+                style = gr.Dropdown(choices=style_options, label="Select Style", value=style_options[0])
                 language = gr.Dropdown(
                     choices=["english", "german", "french", "spanish", "italian", "portuguese"],
                     label="Select Language",
