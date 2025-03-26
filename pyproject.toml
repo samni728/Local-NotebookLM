@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "local_notebooklm"
-dynamic = ["version"]  # Mark version as dynamic
+dynamic = ["version", "dependencies"]
 description = "A local notebook implementation"
 readme = "README.md"
 authors = [
@@ -17,9 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 requires-python = ">=3.12"
-dependencies = [
-    # You can list dependencies here directly or use dynamic deps from requirements.txt
-]
+dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.dynamic]
 version = {attr = "local_notebooklm.version.__version__"}  # Adjust this path to match your actual module structure

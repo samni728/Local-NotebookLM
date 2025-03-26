@@ -20,7 +20,7 @@ else:
 
 # Setup configuration
 setup(
-    name="Local-NotebookLM",
+    name="local-notebooklm",
     version=__version__,  # Use version from version.py
     description="A Local-NotebookLM to convert PDFs into Audio.",
     long_description=open(root_dir / "README.md", encoding="utf-8").read(),
