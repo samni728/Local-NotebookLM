@@ -4,16 +4,6 @@ include README.md
 
 # Include requirements files
 include requirements.txt
-include requirements-dev.txt
-
-# Include documentation
-recursive-include docs *
-
-# Include examples
-recursive-include examples *
-
-# Include tests
-recursive-include tests *
 
 # Exclude development and CI/CD configurations
 exclude .pre-commit-config.yaml
