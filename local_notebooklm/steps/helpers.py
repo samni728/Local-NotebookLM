@@ -227,13 +227,14 @@ def generate_speech(
     output_path: str = "output"
 ):
     if isinstance(client, ElevenLabs):
+        file_extension = response_format.split('_')[0].split('-')[0]
         audio = client.text_to_speech.convert(
             text=text,
             voice_id=voice,
             model_id=model_name,
             output_format=response_format,
         )
-        save(audio=audio, filename=str(f"{output_path}.{response_format}"))
+        save(audio=audio, filename=str(f"{output_path}.{file_extension}"))
     else:
         with client.audio.speech.with_streaming_response.create(
             model=model_name,

@@ -22,9 +22,9 @@ def load_podcast_data(data_path: Path) -> List[Tuple[str, str]]:
     except (ValueError, SyntaxError) as e:
         raise ValueError(f"Invalid podcast data format: {str(e)}")
 
-def concatenate_audio_files(segment_dir: Path) -> Tuple[np.ndarray, int]:
+def concatenate_audio_files(segment_dir: Path, format: str = "wav") -> Tuple[np.ndarray, int]:
     audio_files = sorted(
-        segment_dir.glob("*podcast_segment_*.wav"),
+        segment_dir.glob(f"*podcast_segment_*.{format}"),
         key=lambda x: int(re.search(r'segment_(\d+)\.wav', str(x)).group(1))
     )
     
@@ -60,6 +60,23 @@ def generate_speaker_audio(
     except Exception as e:
         raise AudioGenerationError(f"Failed to generate audio: {str(e)}")
 
+def parse_audio_format(format_string):
+    parts = format_string.split('_')
+    
+    # Default values
+    audio_format = parts[0]
+    sample_rate = None
+    bit_depth = None
+    
+    # Extract sample rate and bit depth if provided
+    if len(parts) > 1 and parts[1].isdigit():
+        sample_rate = int(parts[1])
+    
+    if len(parts) > 2 and parts[2].isdigit():
+        bit_depth = int(parts[2])
+    
+    return audio_format, sample_rate, bit_depth
+
 def step4(
     client: Any = None,
     config: Optional[Dict[str, Any]] = None,
@@ -75,9 +92,13 @@ def step4(
     response_format = config["Text-To-Speech-Model"].get("audio_format", "wav")
     
     try:
-        # Convert output_dir to a Path object
         input_dir = Path(input_dir)
         output_dir = Path(output_dir)
+
+        audio_format, sample_rate, bit_depth = parse_audio_format(response_format)
+
+        if audio_format not in ["wav", "mp3", "ogg", "flac", "aac"]:
+            raise ValueError(f"Unsupported audio format: {audio_format}")
         
         # Create output directories
         segments_dir = output_dir / "segments"
@@ -88,7 +109,7 @@ def step4(
         
         # Generate audio segments
         for i, (speaker, text) in enumerate(tqdm(podcast_data, desc="Generating podcast segments"), 1):
-            output_path = segments_dir / f"podcast_segment_{i}.wav"
+            output_path = segments_dir / f"podcast_segment_{i}"
 
             if speaker == "Speaker 1":
                 current_voice = host
@@ -115,7 +136,7 @@ def step4(
         final_audio, detected_sample_rate = concatenate_audio_files(segments_dir)
         
         # Save final podcast with the detected sample rate
-        final_path = output_dir / "podcast.wav"
+        final_path = f"{output_dir}/podcast.{audio_format}"
         sf.write(str(final_path), final_audio, detected_sample_rate)
         logger.info(f"Podcast generated successfully at {final_path}")
         
