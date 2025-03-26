@@ -55,7 +55,6 @@ def generate_rewritten_transcript(
             max_tokens=max_tokens,
             temperature=temperature
         )
-        print(out)
         return out
 
     except Exception as e:
@@ -138,7 +137,6 @@ def generate_rewritten_transcript_with_overlap(
                 max_tokens=max_tokens,
                 temperature=temperature,
             )
-            print(chunk_transcript)
             
             # Clean up transcript for parsing
             cleaned_transcript = chunk_transcript.strip()
@@ -203,7 +201,6 @@ def generate_rewritten_transcript_with_overlap(
                         max_tokens=max_tokens,
                         temperature=0.3,
                     )
-                    print(fixed_transcript)
                     
                     # Try to parse the fixed transcript
                     chunk_data = literal_eval(fixed_transcript.strip())
