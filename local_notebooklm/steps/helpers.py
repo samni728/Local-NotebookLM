@@ -10,10 +10,13 @@ import time
 FormatType = Literal[
     "podcast", "interview", "panel-discussion", "debate",
     "summary", "narration", "storytelling", "explainer",
-    "lecture", "tutorial", "q-and-a",
-    "news-report", "executive-brief", "meeting", "analysis"
+    "lecture", "tutorial", "q-and-a","news-report",
+    "executive-brief", "meeting", "analysis",
+    "three-people-podcast", "three-people-panel-discussion",
+    "three-people-debate", "four-people-podcast",
+    "four-people-panel-discussion", "four-people-debate",
+    "five-people-podcast", "five-people-panel-discussion", "five-people-debate"
 ]
-
 
 SingleSpeakerFormats = Literal[
     "summary", "narration", "storytelling", "explainer",
