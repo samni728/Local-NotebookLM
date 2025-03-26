@@ -29,7 +29,7 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
         
         # Use the provided config file or default
         if config_file is None:
-            config_path = "/Users/gokdenizgulmez/Desktop/Local-NotebookLM/example_config.json"
+            config_path = "./example_config.json"
         else:
             if hasattr(config_file, 'name'):
                 config_path = config_file.name
@@ -97,11 +97,8 @@ def create_gradio_ui():
             with gr.Column(scale=1):
                 # Input components
                 pdf_file = gr.File(label="Upload PDF", file_types=[".pdf"])
-                config_file = gr.File(
-                    label="Upload Config JSON (Optional)", 
-                    file_types=[".json"],
-                    info="Default: /Users/gokdenizgulmez/Desktop/Local-NotebookLM/example_config.json"
-                )
+                gr.Markdown("*Upload Config JSON (Optional) - Default: /Users/gokdenizgulmez/Desktop/Local-NotebookLM/example_config.json*")
+                config_file = gr.File(label="Config JSON", file_types=[".json"])
                 format_type = gr.Dropdown(choices=format_options, label="Select Format", value=format_options[0])
                 length = gr.Dropdown(choices=length_options, label="Select Length", value=length_options[1] if len(length_options) > 1 else length_options[0])
                 style = gr.Dropdown(choices=style_options, label="Select Style", value=style_options[0])
