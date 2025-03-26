@@ -133,7 +133,7 @@ def step4(
         
         # Concatenate all segments
         logger.info("Concatenating audio segments...")
-        final_audio, detected_sample_rate = concatenate_audio_files(segments_dir)
+        final_audio, detected_sample_rate = concatenate_audio_files(segments_dir, audio_format)
         
         # Save final podcast with the detected sample rate
         final_path = f"{output_dir}/podcast.{audio_format}"
