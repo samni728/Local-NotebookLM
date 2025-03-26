@@ -63,6 +63,7 @@ LengthType = Literal["short", "medium", "long", "very-long"]
 
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
 
+SkipToOptions = [None, 1, 2, 3, 4]
 
 def wait_for_next_step(seconds: float = 2):
     time.sleep(seconds)

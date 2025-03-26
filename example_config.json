@@ -1,5 +1,8 @@
 {
-    "Co-Host-Speaker-Voice": "af_sky+af_bella",
+    "Co-Host-Speaker-1-Voice": "af_sky+af_bella",
+    "Co-Host-Speaker-2-Voice": "af_echo",
+    "Co-Host-Speaker-3-Voice": "af_nova",
+    "Co-Host-Speaker-4-Voice": "af_shimmer",
     "Host-Speaker-Voice": "af_alloy",
 
     "Small-Text-Model": {

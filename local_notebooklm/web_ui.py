@@ -1,20 +1,22 @@
 import os
-import uuid
 import gradio as gr
-import sys
 import argparse
-
-if __name__ == "__main__":
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from local_notebooklm.processor import podcast_processor
-from local_notebooklm.steps.helpers import LengthType, FormatType, StyleType
+from local_notebooklm.steps.helpers import LengthType, FormatType, StyleType, SkipToOptions
 
-def process_podcast(pdf_file, config_file, format_type, length, style, language, additional_preference, output_dir):
-    if pdf_file is None:
-        return "Please upload a PDF file first.", None, "", ""
+
+def process_podcast(pdf_file, config_file, format_type, length, style, language, additional_preference, output_dir, skip_to):
+    if pdf_file is None and (skip_to is None or skip_to == 1):
+        return "Please upload a PDF file first.", None, "", "", ""
     
-    os.makedirs(output_dir, exist_ok=True)
+    if not output_dir:
+        output_dir = "./local_notebooklm/web_ui/output"
+    
+    try:
+        os.makedirs(output_dir, exist_ok=True)
+        print(f"Created output directory: {output_dir}")
+    except Exception as e:
+        return f"Failed to create output directory: {str(e)}", None, "", "", ""
     
     try:
         if hasattr(pdf_file, 'name'):
@@ -30,6 +32,8 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
             else:
                 config_path = config_file
         
+        print(f"Processing with output_dir: {output_dir}")
+        
         success, result = podcast_processor(
             pdf_path=pdf_path,
             config_path=config_path,
@@ -38,7 +42,8 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
             style=style,
             preference=additional_preference if additional_preference else None,
             output_dir=output_dir,
-            language=language
+            language=language,
+            skip_to=skip_to
         )
         
         if success:
@@ -64,12 +69,12 @@ def process_podcast(pdf_file, config_file, format_type, length, style, language,
             
             return "Audio Generated Successfully!", audio_path, file_contents.get("step1/extracted_text.txt", ""), file_contents.get("step1/clean_extracted_text.txt", ""), file_contents.get("step3/podcast_ready_data.txt", "")
         else:
-            return f"Failed to generate audio: {result}", None, "", ""
+            return f"Failed to generate audio: {result}", None, "", "", ""
     
     except Exception as e:
         import traceback
         error_details = traceback.format_exc()
-        return f"An error occurred: {str(e)}\n\nDetails:\n{error_details}", None, "", ""
+        return f"An error occurred: {str(e)}\n\nDetails:\n{error_details}", None, "", "", ""
 
 def create_gradio_ui():
     format_options = list(FormatType.__args__) if hasattr(FormatType, '__args__') else ["podcast"]
@@ -77,7 +82,7 @@ def create_gradio_ui():
     style_options = list(StyleType.__args__) if hasattr(StyleType, '__args__') else ["conversational"]
     
     with gr.Blocks(title="Local-NotebookLM") as app:
-        gr.Markdown("# 🎙️ Local-NotebookLM: PDF to Podcast Converter")
+        gr.Markdown("# 🎙️ Local-NotebookLM: PDF to Audio Converter")
         
         with gr.Row():
             with gr.Column(scale=1):
@@ -96,7 +101,17 @@ def create_gradio_ui():
                     label="Additional Preferences (Optional)",
                     placeholder="Focus on key points, provide examples, etc."
                 )
-                output_dir = gr.Textbox(label="Output Directory", value="./output")
+                output_dir = gr.Textbox(
+                    label="Output Directory", 
+                    value="./local_notebooklm/web_ui/output",
+                    placeholder="Enter the path where output files will be saved"
+                )
+                skip_to = gr.Dropdown(
+                    choices=SkipToOptions,
+                    label="Skip to Step (Optional)",
+                    value=None,
+                    info="Select a step to start from if you want to skip earlier steps"
+                )
                 generate_button = gr.Button("Generate Podcast")
             
             with gr.Column(scale=2):
@@ -119,10 +134,10 @@ def create_gradio_ui():
         
         generate_button.click(
             fn=process_podcast,
-            inputs=[pdf_file, config_file, format_type, length, style, language, additional_preference, output_dir],
-            outputs=[result_message, audio_output, extracted_text, clean_text]
+            inputs=[pdf_file, config_file, format_type, length, style, language, additional_preference, output_dir, skip_to],
+            outputs=[result_message, audio_output, extracted_text, clean_text, audio_script]
         )
-    
+
     return app
 
 def run_gradio_ui(share=False, port=None):
