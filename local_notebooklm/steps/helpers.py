@@ -10,10 +10,13 @@ import time
 FormatType = Literal[
     "podcast", "interview", "panel-discussion", "debate",
     "summary", "narration", "storytelling", "explainer",
-    "lecture", "tutorial", "q-and-a",
-    "news-report", "executive-brief", "meeting", "analysis"
+    "lecture", "tutorial", "q-and-a","news-report",
+    "executive-brief", "meeting", "analysis",
+    "three-people-podcast", "three-people-panel-discussion",
+    "three-people-debate", "four-people-podcast",
+    "four-people-panel-discussion", "four-people-debate",
+    "five-people-podcast", "five-people-panel-discussion", "five-people-debate"
 ]
-
 
 SingleSpeakerFormats = Literal[
     "summary", "narration", "storytelling", "explainer",
@@ -60,6 +63,7 @@ LengthType = Literal["short", "medium", "long", "very-long"]
 
 StyleType = Literal["normal", "friendly", "professional", "academic", "casual", "technical", "gen-z", "funny"]
 
+SkipToOptions = [None, 1, 2, 3, 4]
 
 def wait_for_next_step(seconds: float = 2):
     time.sleep(seconds)
@@ -223,13 +227,14 @@ def generate_speech(
     output_path: str = "output"
 ):
     if isinstance(client, ElevenLabs):
+        file_extension = response_format.split('_')[0].split('-')[0]
         audio = client.text_to_speech.convert(
             text=text,
             voice_id=voice,
             model_id=model_name,
             output_format=response_format,
         )
-        save(audio=audio, filename=str(f"{output_path}.{response_format}"))
+        save(audio=audio, filename=str(f"{output_path}.{file_extension}"))
     else:
         with client.audio.speech.with_streaming_response.create(
             model=model_name,

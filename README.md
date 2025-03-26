@@ -310,6 +310,47 @@ else:
     print(f"Failed to generate podcast: {result}")
 ```
 
+### Gradio Web UI
+
+Local-NotebookLM now includes a user-friendly Gradio web interface that makes it easy to use the tool without command line knowledge:
+
+```bash
+python -m local_notebooklm.web_ui
+```
+
+By default, the web UI runs locally on http://localhost:7860. You can access it from your browser.
+
+#### Web UI Screenshots
+
+![Web UI Main Screen](examples/Gradio-WebUI.png)
+*The main interface of the Local-NotebookLM web UI*
+
+#### Web UI Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--share` | Make the UI accessible over the network | False |
+| `--port` | Specify a custom port | 7860 |
+
+#### Example Commands
+
+Basic local usage:
+```bash
+python -m local_notebooklm.web_ui
+```
+
+Share with others on your network:
+```bash
+python -m local_notebooklm.web_ui --share
+```
+
+Use a custom port:
+```bash
+python -m local_notebooklm.web_ui --port 8080
+```
+
+The web interface provides all the same options as the command line tool in an intuitive UI, making it easier for non-technical users to generate audio content from PDFs.
+
 ### FastAPI Server
 
 Start the FastAPI server to access the functionality via a web API:

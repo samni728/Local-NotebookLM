@@ -48,13 +48,14 @@ def generate_rewritten_transcript(
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": input_text},
         ]
-        return generate_text(
+        out = generate_text(
             client=client,
             model=model_name,
             messages=conversation,
             max_tokens=max_tokens,
             temperature=temperature
         )
+        return out
 
     except Exception as e:
         raise TranscriptGenerationError(f"Failed to generate transcript: {str(e)}")
@@ -198,7 +199,7 @@ def generate_rewritten_transcript_with_overlap(
                         model=model_name,
                         messages=fix_prompt,
                         max_tokens=max_tokens,
-                        temperature=0.2,  # Lower temperature for more deterministic output
+                        temperature=0.3,
                     )
                     
                     # Try to parse the fixed transcript
@@ -294,9 +295,36 @@ def step3(
                 language=language
             )
 
-        # Validate transcript format
         if not validate_transcript_format(transcript):
-            raise TranscriptGenerationError("Generated transcript is not in the correct format")
+            logger.warning("Generated transcript is not in the correct format. Attempting to fix...")
+            
+            fix_prompt = [
+                {"role": "system", "content": "Convert the following text into valid Python syntax as a list of tuples with format: [('Speaker1', 'Text1'), ('Speaker2', 'Text2'), ...]. Return ONLY the Python list, nothing else, no other text."},
+                {"role": "user", "content": transcript}
+            ]
+            
+            try:
+                fixed_transcript = generate_text(
+                    client=client,
+                    model=config["Big-Text-Model"]["model"],
+                    messages=fix_prompt,
+                    max_tokens=config["Step3"]["max_tokens"],
+                    temperature=0.3,
+                )
+                
+                # Try to validate the fixed transcript
+                if validate_transcript_format(fixed_transcript.strip()):
+                    logger.info("Successfully fixed transcript format")
+                    transcript = fixed_transcript.strip()
+                else:
+                    raise TranscriptGenerationError("Generated transcript is not in the correct format after correction attempt")
+                    
+            except Exception as retry_e:
+                # If the fix attempt fails, raise a detailed error
+                error_msg = f"Failed to fix transcript format: {str(retry_e)}"
+                logger.error(error_msg)
+                logger.error(f"Raw output (first 300 chars): {transcript[:300]}...")
+                raise TranscriptGenerationError(error_msg)
 
         # Save transcript
         output_file = output_dir / 'podcast_ready_data'

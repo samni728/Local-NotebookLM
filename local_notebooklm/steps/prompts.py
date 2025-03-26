@@ -329,15 +329,15 @@ The **focus** is strictly on **reformatformatting** the transcript into a list o
 Make sure to structure the response exactly like this:
 
 [
-    ("Speaker n", "translated text 1"),
-    ("Speaker n", "translated text 2"),
-    ("Speaker n", "translated text 3")
+  ("Speaker n", "translated text 1"),
+  ("Speaker n", "translated text 2"),
+  ("Speaker n", "translated text 3")
 ]
 
 Do not change or rewrite the text in any way other than reformatformatting it into a list of tuples and translating it. Your response must only change the format and language, not the content.
 
 Ensure your output is in the correct tuple format, the speaker’s dialogue remains faithful to the original text, and the translation accurately reflects the meaning in {language}.
-DO NOT include episode titles, named speakers, intros, or section headers—ONLY provide raw dialogue labeled as ‘Speaker 1,’ ‘Speaker 2,’ etc. ONLY ONE SPEAKER CAN TALK AT A TIME."""
+DO NOT include episode titles, named speakers, intros, section headers, or ``` — ONLY provide raw dialogue labeled as ‘Speaker 1,’ ‘Speaker 2,’ etc. ONLY ONE SPEAKER CAN TALK AT A TIME."""
 
 
 gen_z_mapping_prompt = """Infuse humor, pop culture references, and a very laid-back conversational tone. Keep it **engaging, slightly chaotic, and fun, but still clear and informative.** Use modern wording naturally, like:  

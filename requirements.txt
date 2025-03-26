@@ -11,3 +11,4 @@ pathlib
 google-genai
 elevenlabs
 anthropic
+gradio

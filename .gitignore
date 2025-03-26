@@ -15,3 +15,9 @@ venv
 
 .conda
 conda
+
+local_notebooklm/web_ui/output
+.local_notebooklm/web_ui/output
+
+.gradio
+gradio
