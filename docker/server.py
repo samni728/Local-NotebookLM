@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import uuid
 
 # Import the processor
-from .processor import podcast_processor
+from local_notebooklm.processor import podcast_processor
 
 # Create FastAPI app
 app = FastAPI(

@@ -1,6 +1,5 @@
 import os
 import gradio as gr
-import argparse
 from local_notebooklm.processor import podcast_processor
 from local_notebooklm.steps.helpers import LengthType, FormatType, StyleType, SkipToOptions
 
@@ -139,20 +138,16 @@ def create_gradio_ui():
 
     return app
 
-def run_gradio_ui(share=False, port=None):
+def run_gradio_ui(share=False, port=7860):
     app = create_gradio_ui()
-    app.launch(share=share, server_port=port)
-
-def parse_arguments():
-    parser = argparse.ArgumentParser(description="Run Local-NotebookLM web UI")
-    parser.add_argument("--share", action="store_true", help="Create a shareable link")
-    parser.add_argument("--port", type=int, default=None, help="Port to run the interface on")
-    
-    return parser.parse_args()
+    app.launch(
+        share=share,
+        server_port=port,
+        server_name="0.0.0.0"
+    )
 
 def main():
-    args = parse_arguments()
-    run_gradio_ui(share=args.share, port=args.port)
+    run_gradio_ui(share=False, port=7860)
 
 if __name__ == "__main__" or __name__ == "local_notebooklm.web_ui":
     main()
