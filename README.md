@@ -71,7 +71,12 @@ You can also run both the Gradio Web UI and FastAPI server using Docker Compose.
 
 ### Steps
 
-1. Make sure you are in the project root directory (where the `docker-compose.yml` is located).
+1. Open a terminal and navigate to the `docker/` folder inside the project:
+
+```bash
+cd docker
+```
+
 2. Build and start the containers:
 
 ```bash
