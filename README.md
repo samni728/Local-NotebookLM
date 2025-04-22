@@ -60,6 +60,36 @@ source venv/bin/activate  # On Windows, use: venv\Scripts\activate
 ```bash
 pip install -r requirements.txt
 ```
+
+## Running with Docker Compose
+
+You can also run both the Gradio Web UI and FastAPI server using Docker Compose.
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your system
+
+### Steps
+
+1. Make sure you are in the project root directory (where the `docker-compose.yml` is located).
+2. Build and start the containers:
+
+```bash
+docker-compose up --build
+```
+
+This command will:
+
+- Start the Gradio Web UI at [http://localhost:7860](http://localhost:7860)
+- Start the FastAPI server at [http://localhost:8000](http://localhost:8000)
+
+You can access the web interface or use the API endpoints after running the command.
+
+To stop the services, press `CTRL+C` and then run:
+
+```bash
+docker-compose down
+```
 ## Optional pre requisites
 ### Local TTS server
 - Follow one installation type (docker, docker-compose, uv) at https://github.com/remsky/Kokoro-FastAPI

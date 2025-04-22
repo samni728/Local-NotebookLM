@@ -1,20 +1,18 @@
-# Use an official Python image
+# Use official Python slim image
 FROM python:3.11-slim
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements if you have it
-COPY requirements.txt .
-
 # Install Python dependencies
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files
+# Copy project files
 COPY . .
 
-# Default command (can be overridden)
+# Default: run Gradio app (override via docker-compose)
 CMD ["python", "local_notebooklm/web_ui.py"]

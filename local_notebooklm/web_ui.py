@@ -154,5 +154,7 @@ def main():
     args = parse_arguments()
     run_gradio_ui(share=args.share, port=args.port)
 
-if __name__ == "__main__" or __name__ == "local_notebooklm.web_ui":
-    main()
+if __name__ == "__main__":
+    import os
+    if os.environ.get("MODE") == "ui":
+        main()
