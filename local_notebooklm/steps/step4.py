@@ -56,7 +56,18 @@ def generate_speaker_audio(
 ) -> None:
     try:
         wait_for_next_step()
-        generate_speech(client=client, model_name=model_name, text=text, output_path=output_path, voice=voice, response_format=response_format)
+        generate_speech(
+            client=client,
+            model_name=model_name,
+            text=text,
+            output_path=output_path,
+            voice=voice,
+            response_format=response_format
+        )
+        # Validate that the audio file was created
+        output_file = output_path.with_suffix(f".{response_format}")
+        if not output_file.exists():
+            raise AudioGenerationError(f"Audio file was not generated at {output_file}")
     except Exception as e:
         raise AudioGenerationError(f"Failed to generate audio: {str(e)}")
 
